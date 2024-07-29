@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,7 +6,7 @@ import 'swiper/css';
 import Slider from './Slider';
 import { API_KEY } from '../api';
 import './MovieDetail.css';  // Ensure CSS is imported
-import Button from './Button'
+import Button from './Button';
 
 const MovieDetail = () => {
     const { id } = useParams();
@@ -16,28 +16,31 @@ const MovieDetail = () => {
     const [similarMovies, setSimilarMovies] = useState([]);
     const [currentServer, setCurrentServer] = useState(`https://multiembed.mov/?video_id=${id}&tmdb=1`);
     const videoSectionRef = useRef(null);
-    const playNowRef = useRef(null);
     const navigate = useNavigate();
+
+    const fetchMovieDetails = useCallback(async () => {
+        try {
+            const movieRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
+            setMovie(movieRes.data);
+
+            const castRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`);
+            setCast(castRes.data.cast.slice(0, 10));
+
+            const videosRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`);
+            setRelatedVideos(videosRes.data.results.slice(0, 4)); // Limit to 4 videos
+
+            const similarMoviesRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}`);
+            setSimilarMovies(similarMoviesRes.data.results);
+        } catch (error) {
+            console.error("Error fetching movie details:", error);
+        }
+    }, [id]);
 
     useEffect(() => {
         fetchMovieDetails();
         setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1`);
         window.scrollTo(0, 0);
-    }, [id]);
-
-    const fetchMovieDetails = async () => {
-        const movieRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
-        setMovie(movieRes.data);
-
-        const castRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`);
-        setCast(castRes.data.cast.slice(0, 10));
-
-        const videosRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`);
-        setRelatedVideos(videosRes.data.results.slice(0, 4)); // Limit to 4 videos
-
-        const similarMoviesRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}`);
-        setSimilarMovies(similarMoviesRes.data.results);
-    };
+    }, [fetchMovieDetails, id]);
 
     const handleServerChange = (serverUrl) => {
         setCurrentServer(serverUrl);
@@ -121,7 +124,6 @@ const MovieDetail = () => {
             </section>
 
             <section className="related-videos">
-
                 <div className="videos-list">
                     <h2>Related Videos</h2>
                     {relatedVideos.map(video => (

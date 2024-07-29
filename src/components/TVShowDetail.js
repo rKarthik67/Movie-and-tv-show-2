@@ -23,11 +23,16 @@ const TVShowDetail = () => {
   const videoSectionRef = useRef(null);
 
   useEffect(() => {
-    fetchShowDetails();
-    fetchEpisodes(1);
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=1`);
+    const fetchData = async () => {
+      await fetchShowDetails();
+      await fetchEpisodes(1); // Default to the first season
+      setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=1`);
+    };
+  
+    fetchData();
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [id]); // Only include `id` as the dependency
+  
 
   const fetchShowDetails = async () => {
     const showRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}`);
