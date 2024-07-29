@@ -86,7 +86,7 @@ const MovieDetail = () => {
                             <SwiperSlide key={member.cast_id}>
                                 <div style={{ margin: '10px' }}>
                                     <img className='cast-image'
-                                        src={`https://image.tmdb.org/t/p/w200${member.profile_path}`}
+                                        src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                                         alt={member.name}
                                         style={{ borderRadius: '10px', width: '100%' }}
                                     />

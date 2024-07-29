@@ -19,7 +19,7 @@ const Slider = ({ items, onItemClick, itemType }) => {
         <SwiperSlide key={item.id} onClick={() => onItemClick(item.id, itemType)}>
           <div>
             <img
-              src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
               alt={item.title || item.name}
               className="swiper-slide-img"
             />

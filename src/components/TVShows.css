@@ -22,8 +22,8 @@
 }
 
 .tvshows-page h2 {
-  margin-top: 10px;
-  margin-left: 20px;
+  margin: 10px 20px 10px 20px;
+  /* margin-left: 20px; */
   position: relative;
   z-index: 99;
   color: white;

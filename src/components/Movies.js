@@ -146,7 +146,7 @@ const Movies = () => {
             <div className='grid-view'>
                 {movies.map(movie => (
                     <Link key={movie.id} to={`/movies/${movie.id}`}>
-                        <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} style={{ borderRadius: '10px' }} />
+                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} style={{ borderRadius: '10px' }} />
                         <h3>{movie.title}</h3>
                     </Link>
                 ))}

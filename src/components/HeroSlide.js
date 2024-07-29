@@ -1,6 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { Autoplay } from 'swiper/modules'; // Correct import for Autoplay module
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TrailerModal from './TrailerModal';
@@ -34,7 +35,13 @@ const HeroSlide = ({ movies }) => {
 
   return (
     <>
-      <Swiper spaceBetween={30} slidesPerView={1} loop={true}>
+      <Swiper
+        modules={[Autoplay]}
+        grabCursor={true}
+        spaceBetween={0}
+        slidesPerView={1}
+        autoplay={{ delay: 3000 }}
+      >
         {movies.map((movie) => (
           <SwiperSlide key={movie.id}>
             <div

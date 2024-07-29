@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Slider from './Slider';  // Ensure Slider is imported
+import Slider from './Slider';
 import { API_KEY } from '../api';
 import './TVShowDetail.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -15,17 +15,17 @@ const TVShowDetail = () => {
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [similarShows, setSimilarShows] = useState([]);
   const [seasons, setSeasons] = useState([]);
-  const [selectedSeason, setSelectedSeason] = useState(1); // Default season 1
+  const [selectedSeason, setSelectedSeason] = useState(1);
   const [episodes, setEpisodes] = useState([]);
   const [currentServer, setCurrentServer] = useState('');
-  const [selectedEpisode, setSelectedEpisode] = useState(1); // Default episode 1
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
   const navigate = useNavigate();
   const videoSectionRef = useRef(null);
 
   useEffect(() => {
     fetchShowDetails();
-    fetchEpisodes(1); // Fetch episodes for default season 1
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=1`); // Default server 1
+    fetchEpisodes(1);
+    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=1`);
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -52,13 +52,13 @@ const TVShowDetail = () => {
   const handleSeasonSelect = async (seasonNumber) => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
-    setSelectedEpisode(1); // Reset to episode 1 when changing season
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${seasonNumber}&e=1`); // Default to server 1
+    setSelectedEpisode(1);
+    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${seasonNumber}&e=1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
     setSelectedEpisode(episodeNumber);
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${episodeNumber}`); // Default to server 1
+    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${episodeNumber}`);
   };
 
   const handleServerChange = (serverUrl) => {
@@ -76,13 +76,13 @@ const TVShowDetail = () => {
         background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(https://image.tmdb.org/t/p/original${show.backdrop_path}) no-repeat center center/cover`,
         padding: '100px', color: '#fff', paddingBottom: '60px'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }} className='tvshow-details-div'>
+        <div style={{ display: 'flex'}} className='tvshow-details-div'>
           <img className='poster-image' src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ width: '300px', borderRadius: '10px' }} />
           <div className='series-info' style={{ marginLeft: '20px' }}>
             <h1>{show.name}</h1>
             <div className="genres">
-              {show.genres && show.genres.slice(0, 5).map((genre, i) => (
-                <span key={i} className="genres__item" >{genre.name}</span>
+              {show.genres && show.genres.slice(0, 5).map((genre) => (
+                <span key={genre.id} className="genres__item">{genre.name}</span>
               ))}
             </div>
             <p>{show.overview}</p>
@@ -105,10 +105,10 @@ const TVShowDetail = () => {
             loop={false}
           >
             {cast.map(member => (
-              <SwiperSlide key={member.cast_id}>
+              <SwiperSlide key={member.id}>
                 <div style={{ margin: '10px' }}>
                   <img
-                    src={`https://image.tmdb.org/t/p/w200${member.profile_path}`}
+                    src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                     alt={member.name}
                     style={{ borderRadius: '10px', width: '100%' }}
                   />
@@ -137,7 +137,7 @@ const TVShowDetail = () => {
               <SwiperSlide key={season.id} onClick={() => handleSeasonSelect(season.season_number)}>
                 <div style={{ margin: '10px', cursor: 'pointer' }}>
                   <img
-                    src={`https://image.tmdb.org/t/p/w200${season.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/w500${season.poster_path}`}
                     alt={season.name}
                     style={{ borderRadius: '10px', width: '100%' }}
                   />
@@ -164,7 +164,7 @@ const TVShowDetail = () => {
                 <SwiperSlide key={episode.id} onClick={() => handleEpisodeSelect(episode.episode_number)}>
                   <div style={{ margin: '10px', cursor: 'pointer' }}>
                     <img
-                      src={`https://image.tmdb.org/t/p/w200${episode.still_path}`}
+                      src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
                       alt={episode.name}
                       style={{ borderRadius: '10px', width: '100%' }}
                     />
@@ -190,7 +190,7 @@ const TVShowDetail = () => {
               title="Episode Player"
             ></iframe>
             <div className='server-buttons'>
-            <Button onClick={() => handleServerChange(`https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
+              <Button onClick={() => handleServerChange(`https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
               <Button onClick={() => handleServerChange(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 2</Button>
               <Button onClick={() => handleServerChange(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 3</Button>
               <Button onClick={() => handleServerChange(`https://moviesapi.club/tv/${id}-${selectedSeason}-${selectedEpisode}`)}>Server 4</Button>
@@ -210,6 +210,7 @@ const TVShowDetail = () => {
                 src={`https://www.youtube.com/embed/${video.key}`}
                 frameBorder="0"
                 allowFullScreen
+                title={video.name}
                 className="video-iframe"
               ></iframe>
             </div>
