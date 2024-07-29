@@ -21,12 +21,13 @@ const TVShowDetail = () => {
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const navigate = useNavigate();
   const videoSectionRef = useRef(null);
+  const serverSectionRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchShowDetails();
       await fetchEpisodes(1); // Default to the first season
-      setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=1&e=1`);
+      setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=1&e=1`);
     };
   
     fetchData();
@@ -58,12 +59,12 @@ const TVShowDetail = () => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
     setSelectedEpisode(1);
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${seasonNumber}&e=1`);
+    setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${seasonNumber}&e=1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
     setSelectedEpisode(episodeNumber);
-    setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${episodeNumber}`);
+    setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${episodeNumber}`);
   };
 
   const handleServerChange = (serverUrl) => {
@@ -73,6 +74,10 @@ const TVShowDetail = () => {
 
   const handleItemClick = (id, type) => {
     navigate(`/tvshows/${id}`);
+  };
+
+  const scrollToServerSection = () => {
+    serverSectionRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -91,7 +96,7 @@ const TVShowDetail = () => {
               ))}
             </div>
             <p>{show.overview}</p>
-            <Button className='btn-playnow' style={{ margin: '10px 0' }}>Play Now</Button>
+            <Button className='btn-playnow' style={{ margin: '10px 0' }} onClick={scrollToServerSection}>Play Now</Button>
           </div>
         </div>
       </section>
@@ -183,7 +188,7 @@ const TVShowDetail = () => {
         </div>
       </section>
 
-      <section className='server-section'>
+      <section className='server-section' ref={serverSectionRef}>
         <div className='server-player'>
           <div ref={videoSectionRef} className="video-player">
             <iframe className='iframe-episode'
