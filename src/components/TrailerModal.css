@@ -1,0 +1,41 @@
+.trailer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* High z-index to ensure it appears on top */
+  }
+  
+  .trailer-modal__content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .trailer-modal__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    border-radius: 20%; /* Make it round */
+  }
+  
+  .trailer-modal iframe {
+    border-radius: 10px;
+  }
+  

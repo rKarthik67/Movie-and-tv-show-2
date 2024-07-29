@@ -1,0 +1,297 @@
+/* General Styles */
+.backdrop-image {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+}
+
+.backdrop-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, #0f0f0f, rgba(0, 0, 0, 0));
+    z-index: 1;
+    /* Ensure it is below content */
+    pointer-events: none;
+    /* Ensures it doesn't interfere with clicks */
+}
+
+.poster-image {
+    width: 300px;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+.movie-info {
+    z-index: 2;
+}
+
+.related-videos {
+    text-align: left;
+    /* Align text to the left */
+    margin: 20px 0;
+}
+
+.related-videos h2 {
+    color: white;
+    margin-bottom: 20px;
+    text-align: left;
+    /* Align header to the left */
+    padding-left: 22px;
+}
+
+.videos-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    /* Adjust gap as needed */
+    width: 100%;
+    /* Ensure it covers the full width of the container */
+}
+
+.video-item {
+    max-width: 100%;
+    /* Ensure it scales with the container */
+    width: 100%;
+    /* Adjusted to be slightly less than 100% */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.video-title {
+    color: white;
+    margin-bottom: 10px;
+    text-align: left;
+    /* Align title to the left */
+    width: 100%;
+    /* Ensure it takes full width */
+    margin-left: 0;
+    /* Remove any left margin */
+}
+
+.video-iframe {
+    width: 100%;
+    /* Make iframe cover the full width of the container */
+    height: 500px;
+    /* Adjust height as needed */
+    border-radius: 20px;
+}
+
+.cast-section .cast-slider {
+    padding: 20px;
+}
+
+.cast-section .cast-slider h2 {
+    color: white;
+    padding: 15px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.cast-section .cast-slider p {
+    color: white;
+    text-align: center;
+}
+
+.similar-section .similar-movies {
+    padding: 30px;
+}
+
+.similar-section .similar-movies h2 {
+    color: white;
+}
+
+.server-player {
+    padding: 30px;
+}
+
+.server-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.iframe-movie {
+    border-radius: 20px;
+}
+
+.genres .genres__item {
+    
+    padding: 0.5rem 1.5rem;
+    border: 2px solid white;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: black;
+}
+
+/* Tablet Styles */
+@media screen and (max-width: 1024px) {
+    .backdrop-image {
+        padding: 50px;
+    }
+
+    .poster-image {
+        width: 200px;
+    }
+
+    .movie-info {
+        margin-left: 15px;
+    }
+
+    .video-iframe {
+        height: 400px;
+    }
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    .backdrop-image {
+        padding: 30px;
+        height: 380px;
+    }
+
+    .backdrop-image>div {
+        flex-direction: column;
+    }
+
+    .poster-image {
+        display: none;
+        /* Hide poster image on mobile */
+    }
+
+    .movie-info {
+        margin-left: 0px !important;
+        text-align: left;
+    }
+
+    .movie-info h1 {
+        font-size: 24px;
+    }
+
+    .genres .genres__item {
+    
+        padding: 0.5rem 1.2rem;
+        border: 2px solid white;
+        border-radius: 30px;
+        font-size: 0.5rem;
+        font-weight: 650;
+        background-color: black;
+    }
+
+    .movie-info p {
+        font-size: 14px;
+    }
+
+    .btn-playnow {
+        font-size: 15px;
+    }
+
+    .cast-section .cast-slider {
+        padding: 10px;
+    }
+
+    .cast-section .swiper-slide {
+        width: 120px !important;
+        /* Adjust the width of cast slides */
+        margin-right: 10px;
+        /* Add gap between cast images */
+    }
+
+    .cast-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .cast-section .cast-slider p {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .server-player {
+        padding: 15px;
+    }
+
+    .server-buttons {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .server-buttons button {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .video-iframe {
+        height: 300px;
+    }
+
+    .related-videos h2,
+    .similar-section .similar-movies h2 {
+        font-size: 20px;
+        padding-left: 15px;
+    }
+
+    .video-title {
+        font-size: 16px;
+    }
+
+    .similar-section .similar-movies {
+        padding: 15px;
+    }
+
+    .movie-details-div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: calc(100% - 40px);
+        /* Adjust width to fit within the container */
+    }
+}
+
+/* Additional adjustments for very small screens */
+@media screen and (max-width: 480px) {
+    .backdrop-image {
+        padding: 20px;
+    }
+
+    .movie-info {
+        margin-left: 0px !important;
+        text-align: left;
+    }
+
+    .movie-info h1 {
+        font-size: 20px;
+    }
+
+    .genres .genres__item {
+    
+        padding: 0.5rem 1.2rem;
+        border: 2px solid white;
+        border-radius: 30px;
+        font-size: 0.5rem;
+        font-weight: 650;
+        background-color: black;
+    }
+
+    .movie-info p {
+        font-size: 12px;
+    }
+
+    .cast-section .swiper-slide {
+        width: 100px !important;
+    }
+
+    .video-iframe {
+        height: 250px;
+    }
+}

@@ -1,0 +1,182 @@
+/* Base styles for HeroSlide component */
+.hero-slide__item {
+  position: relative;
+  padding: 20rem 0; /* Adjust if needed */
+  width: 100%;
+  height: 25vh; /* Keep or adjust */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero-slide__item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+  z-index: 0; /* Ensure it is below content */
+}
+
+.hero-slide__item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, #0f0f0f, rgba(0, 0, 0, 0));
+  z-index: 1; /* Ensure it is below content */
+  pointer-events: none; /* Ensures it doesn't interfere with clicks */
+}
+
+.hero-slide__item__content {
+  position: relative;
+  z-index: 2; /* Ensures content is above the gradients */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3rem; /* Adjust padding if needed */
+  width: 100%;
+  height: 100%;
+}
+
+.movieTitle {
+  color: white;
+  font-size: 82px;
+  margin-bottom: 25px;
+}
+
+.overview {
+  font-weight: 700;
+  color: #fff;
+}
+
+.btn {
+  margin-top: 18px;
+}
+
+.btn-watchnow {
+  margin-right: 10px;
+}
+
+.btn-watchtrailer {
+  margin-left: 10px;
+}
+
+.hero-slide__item__content__info {
+  width: 55%;
+}
+
+.hero-slide__item__content__poster {
+  width: 400px; /* Set width for poster */
+  height: 600px; /* Set height for poster */
+  position: absolute; /* Position it absolutely within its container */
+  right: 10%; /* Adjust positioning to ensure it's inside the slide */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust vertical centering */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-slide__item__content__poster img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+/* Existing styles... */
+
+/* Tablet styles */
+@media screen and (max-width: 1024px) {
+  .hero-slide__item {
+    padding: 10rem 0;
+    height: auto;
+  }
+
+  .hero-slide__item__content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 2rem;
+  }
+
+  .hero-slide__item__content__info {
+    width: 100%;
+  }
+
+  .movieTitle {
+    font-size: 48px;
+    margin-bottom: 15px;
+  }
+
+  .overview {
+    font-size: 14px;
+    width: 90%;
+  }
+
+  .btn {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-watchnow,
+  .btn-watchtrailer {
+    margin: 0;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .hero-slide__item__content__poster {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    transform: none;
+  }
+
+  .hero-slide__item__content__poster img {
+    max-width: 300px;
+    height: auto;
+    display: none;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .hero-slide__item {
+    padding: 6rem 0;
+  }
+
+  .hero-slide__item__content {
+    padding: 0 1rem;
+  }
+
+  .movieTitle {
+    font-size: 36px;
+    margin-bottom: 10px;
+    width: 90%;
+  }
+
+  .overview {
+    font-size: 10px;
+    height: auto; /* Allow the height to adjust based on content */
+    width: 90%; /* Use a percentage width to ensure responsiveness */
+    max-width: 380px; /* Set a max-width if needed */
+    
+  }
+
+  .btn-watchnow,
+  .btn-watchtrailer {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .hero-slide__item__content__poster {
+    display: none;
+  }
+}
