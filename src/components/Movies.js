@@ -163,7 +163,7 @@ const Movies = () => {
                             {genre.name}
                         </label>
                     ))}
-                    <h3>Genres:</h3>
+                    <h3>Year:</h3>
                     {years.map(year => (
                         <label key={year}>
                             <input

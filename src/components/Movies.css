@@ -142,7 +142,7 @@
 .filters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
+    gap: 5px;
     color: white;
 }
 
@@ -275,6 +275,7 @@
     .movies-page .grid-view {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         padding: 0.5rem 5px;
+        gap: 10px;
     }
 
     .movies-page h2 {
