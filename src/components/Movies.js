@@ -14,15 +14,20 @@ const Movies = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [genres, setGenres] = useState([]);
+    const [selectedYears, setSelectedYears] = useState([]);
+    const [years, setYears] = useState([]);
 
     useEffect(() => {
         fetchGenres();
+        fetchYears();
         const searchQuery = searchParams.get('search') || '';
         const genreFilter = searchParams.get('genres') || '';
+        const yearFilter = searchParams.get('years') || '';
         const pageParam = parseInt(searchParams.get('page')) || 1;
         setQuery(searchQuery);
         setSelectedGenres(genreFilter.split(',').filter(Boolean));
-        fetchMovies(pageParam, searchQuery, genreFilter);
+        setSelectedYears(yearFilter.split(',').filter(Boolean));
+        fetchMovies(pageParam, searchQuery, genreFilter, yearFilter);
     }, [searchParams]);
 
     const fetchGenres = async () => {
@@ -34,9 +39,15 @@ const Movies = () => {
         }
     };
 
-    const fetchMovies = async (page, query = '', genreIds = '') => {
+    const fetchYears = () => {
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({ length: currentYear - 1980 + 1 }, (_, i) => 1980 + i);
+        setYears(years);
+    };
+
+    const fetchMovies = async (page, query = '', genreIds = '', yearIds = '') => {
         try {
-            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}`;
+            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=true&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
             const res = await axios.get(url);
             setMovies(res.data.results);
             setTotalPages(res.data.total_pages);
@@ -50,6 +61,7 @@ const Movies = () => {
         setSearchParams({
             search: query,
             genres: selectedGenres.join(','),
+            years: selectedYears.join(','),
             page: 1
         });
     };
@@ -62,6 +74,14 @@ const Movies = () => {
         );
     };
 
+    const handleYearChange = (year) => {
+        setSelectedYears(prev =>
+            prev.includes(year.toString())
+                ? prev.filter(id => id !== year.toString())
+                : [...prev, year.toString()]
+        );
+    };
+
     const toggleFilters = () => {
         const filtersContainer = document.querySelector('.filters-container');
         filtersContainer.classList.toggle('active');
@@ -71,6 +91,7 @@ const Movies = () => {
         setSearchParams({
             search: query,
             genres: selectedGenres.join(','),
+            years: selectedYears.join(','),
             page: newPage
         });
     };
@@ -130,6 +151,7 @@ const Movies = () => {
             </div>
             <div className="filters-container">
                 <div className="filters-grid">
+                    <h3>Genres:</h3>
                     {genres.map(genre => (
                         <label key={genre.id}>
                             <input
@@ -139,6 +161,18 @@ const Movies = () => {
                                 onChange={() => handleGenreChange(genre.id.toString())}
                             />
                             {genre.name}
+                        </label>
+                    ))}
+                    <h3>Genres:</h3>
+                    {years.map(year => (
+                        <label key={year}>
+                            <input
+                                type="checkbox"
+                                value={year}
+                                checked={selectedYears.includes(year.toString())}
+                                onChange={() => handleYearChange(year)}
+                            />
+                            {year}
                         </label>
                     ))}
                 </div>
