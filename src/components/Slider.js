@@ -10,7 +10,7 @@ const Slider = ({ items, onItemClick, itemType }) => {
       slidesPerView={4}
       grabCursor={true}
       breakpoints={{
-        1024: { slidesPerView: 8 },
+        1024: { slidesPerView: 6.45 },
         768: { slidesPerView: 2 },
         480: { slidesPerView: 2 },
       }}

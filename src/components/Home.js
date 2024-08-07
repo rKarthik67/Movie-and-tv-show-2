@@ -15,6 +15,7 @@ const Home = () => {
   const [topRatedTVShows, setTopRatedTVShows] = useState([]);
   const navigate = useNavigate();
   const [heroSlideCurrReleasedMovies, setHeroSlideCurrReleasedMovies] = useState([]);
+  const [currentlyReleasedTamilMovies, setCurrentlyReleasedTamilMovies] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -29,6 +30,9 @@ const Home = () => {
 
     const topMoviesRes = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`);
     setTopRatedMovies(topMoviesRes.data.results);
+
+    const currentTamilMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ta`);
+    setCurrentlyReleasedTamilMovies(currentTamilMoviesRes.data.results);
 
     const showsRes = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`);
     setTVShows(showsRes.data.results);
@@ -69,6 +73,16 @@ const Home = () => {
           </div>
           <Slider items={topRatedMovies} onItemClick={handleItemClick} itemType="movie" />
         </section>
+
+        {/* <section>
+          <div className='type-section'>
+            <h2>Tamil Movies</h2>
+            <Link to="/tamil-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedTamilMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section> */}
 
         <section>
           <div className='type-section'>

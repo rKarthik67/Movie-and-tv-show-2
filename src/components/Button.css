@@ -41,6 +41,12 @@ button {
     font-size: 1rem;
 }
 
+.btn-btn.small-for-home-page {
+    border-width: 2px;
+    padding: 0.25rem 1.5rem;
+    font-size: 1rem;
+}
+
 @media (max-width: 480px){
     .btn-btn.small-for-home-page {
         border-width: 2px;

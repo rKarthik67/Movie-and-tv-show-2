@@ -8,6 +8,7 @@ import TVShows from './components/TVShows';
 // import Watchlist from './components/Watchlist';
 import MovieDetail from './components/MovieDetail';
 import TVShowDetail from './components/TVShowDetail';
+// import TamilMovies from './components/TamilMovies';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             {/* <Route path="/watchlist" element={<Watchlist />} /> */}
             <Route path="/movies/:id" element={<MovieDetail />} />
             <Route path="/tvshows/:id" element={<TVShowDetail />} />
+            {/* <Route path="/tamil-movies" element={<TamilMovies />} /> */}
           </Routes>
         </main>
         <Footer />
