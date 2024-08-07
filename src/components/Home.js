@@ -5,6 +5,8 @@ import HeroSlide from './HeroSlide';
 import Slider from './Slider';  // Ensure Slider component is imported
 import { API_KEY } from '../api';
 import './Home.css';
+import { Link } from 'react-router-dom';
+import { OutlineButton } from './Button';
 
 const Home = () => {
   const [currentlyReleasedMovies, setCurrentlyReleasedMovies] = useState([]);
@@ -46,25 +48,45 @@ const Home = () => {
   return (
     <div>
       <HeroSlide movies={heroSlideCurrReleasedMovies} />
-    
+
       <div className='section-div'>
         <section>
-          <h2>Trending Movies</h2>
+          <div className='type-section'>
+            <h2>Trending Movies</h2>
+            <Link to="/movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
           <Slider items={currentlyReleasedMovies} onItemClick={handleItemClick} itemType="movie" />
         </section>
 
         <section>
-          <h2>Top Rated Movies</h2>
+          <div className='type-section'>
+            <h2>Top Rated Movies</h2>
+            <Link to="/movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
           <Slider items={topRatedMovies} onItemClick={handleItemClick} itemType="movie" />
         </section>
 
         <section>
-          <h2>TV Shows</h2>
+          <div className='type-section'>
+            <h2>TV Shows</h2>
+            <Link to="/tvshows">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
           <Slider items={tvShows} onItemClick={handleItemClick} itemType="tv" />
         </section>
 
         <section>
-          <h2>Top Rated TV Shows</h2>
+          <div className='type-section'>
+            <h2>Top Rated TV Shows</h2>
+            <Link to="/tvshows">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
           <Slider items={topRatedTVShows} onItemClick={handleItemClick} itemType="tv" />
         </section>
       </div>

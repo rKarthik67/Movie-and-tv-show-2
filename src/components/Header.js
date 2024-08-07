@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
+import ark from '../assets/arkplay2.png'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,7 +28,10 @@ const Header = () => {
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="logo">ARK PLAY</div>
+      <div className="logo">
+        {/* <img className="ark" src={ark} alt="" style={{width: '50px'}}/> */}
+        ARK PLAY
+      </div>
       <nav className="nav">
         <Link to="/" className="nav-link" onClick={(e) => handleNavClick(e, '/')}>Home</Link>
         <Link to="/movies" className="nav-link" onClick={(e) => handleNavClick(e, '/movies')}>Movies</Link>

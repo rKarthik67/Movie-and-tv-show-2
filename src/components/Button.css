@@ -40,3 +40,12 @@ button {
     padding: 0.25rem 1.5rem;
     font-size: 1rem;
 }
+
+@media (max-width: 480px){
+    .btn-btn.small-for-home-page {
+        border-width: 2px;
+        padding: 0.22rem 1.3rem;
+        margin: 0px;
+        font-size: 12px;
+    }
+}
