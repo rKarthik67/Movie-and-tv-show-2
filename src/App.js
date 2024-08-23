@@ -8,7 +8,12 @@ import TVShows from './components/TVShows';
 // import Watchlist from './components/Watchlist';
 import MovieDetail from './components/MovieDetail';
 import TVShowDetail from './components/TVShowDetail';
-// import TamilMovies from './components/TamilMovies';
+import TamilMovies from './components/TamilMovies';
+import MalayalamMovies from './components/MalayalamMovies';
+import TeluguMovies from './components/TeluguMovies';
+import KannadaMovies from './components/KannadaMovies';
+import HindiMovies from './components/HindiMovies';
+
 
 function App() {
   return (
@@ -23,7 +28,11 @@ function App() {
             {/* <Route path="/watchlist" element={<Watchlist />} /> */}
             <Route path="/movies/:id" element={<MovieDetail />} />
             <Route path="/tvshows/:id" element={<TVShowDetail />} />
-            {/* <Route path="/tamil-movies" element={<TamilMovies />} /> */}
+            <Route path="/tamil-movies" element={<TamilMovies />} />
+            <Route path="/malayalam-movies" element={<MalayalamMovies />} />
+            <Route path="/telugu-movies" element={<TeluguMovies />} />
+            <Route path="/kannada-movies" element={<KannadaMovies />} />
+            <Route path="/hindi-movies" element={<HindiMovies />} />
           </Routes>
         </main>
         <Footer />

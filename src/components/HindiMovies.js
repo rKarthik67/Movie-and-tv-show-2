@@ -6,7 +6,7 @@ import bg from '../assets/footer-bg.jpg';
 import Button, { OutlineButton } from './Button'; 
 import './Movies.css';
 
-const TamilMovies = () => {
+const HindiMovies = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -47,7 +47,7 @@ const TamilMovies = () => {
 
   const fetchMovies = async (page, query = '', genreIds = '', yearIds = '') => {
     try {
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ta&sort_by=popularity.desc&include_adult=true&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
+      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc&include_adult=true&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
       const res = await axios.get(url);
       setMovies(res.data.results);
       setTotalPages(res.data.total_pages);
@@ -191,5 +191,5 @@ const TamilMovies = () => {
   );
 };
 
-export default TamilMovies;
+export default HindiMovies;
           

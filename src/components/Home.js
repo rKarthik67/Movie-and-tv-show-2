@@ -16,6 +16,11 @@ const Home = () => {
   const navigate = useNavigate();
   const [heroSlideCurrReleasedMovies, setHeroSlideCurrReleasedMovies] = useState([]);
   const [currentlyReleasedTamilMovies, setCurrentlyReleasedTamilMovies] = useState([]);
+  const [currentlyReleasedMalayalamMovies, setCurrentlyReleasedMalayalamMovies] = useState([]);
+  const [currentlyReleasedTeluguMovies, setCurrentlyReleasedTeluguMovies] = useState([]);
+  const [currentlyReleasedKannadaMovies, setCurrentlyReleasedKannadaMovies] = useState([]);
+  const [currentlyReleasedHindiMovies, setCurrentlyReleasedHindiMovies] = useState([]);
+  
 
   useEffect(() => {
     fetchData();
@@ -33,6 +38,18 @@ const Home = () => {
 
     const currentTamilMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ta`);
     setCurrentlyReleasedTamilMovies(currentTamilMoviesRes.data.results);
+
+    const currentMalayalamMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ml`);
+    setCurrentlyReleasedMalayalamMovies(currentMalayalamMoviesRes.data.results);
+
+    const currentTeluguMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=te`);
+    setCurrentlyReleasedTeluguMovies(currentTeluguMoviesRes.data.results);
+
+    const currentKannadaMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=kn`);
+    setCurrentlyReleasedKannadaMovies(currentKannadaMoviesRes.data.results);
+
+    const currentHindiMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi`);
+    setCurrentlyReleasedHindiMovies(currentHindiMoviesRes.data.results);
 
     const showsRes = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`);
     setTVShows(showsRes.data.results);
@@ -74,16 +91,6 @@ const Home = () => {
           <Slider items={topRatedMovies} onItemClick={handleItemClick} itemType="movie" />
         </section>
 
-        {/* <section>
-          <div className='type-section'>
-            <h2>Tamil Movies</h2>
-            <Link to="/tamil-movies">
-              <OutlineButton className="small-for-home-page">View more</OutlineButton>
-            </Link>
-          </div>
-          <Slider items={currentlyReleasedTamilMovies} onItemClick={handleItemClick} itemType="movie" />
-        </section> */}
-
         <section>
           <div className='type-section'>
             <h2>TV Shows</h2>
@@ -103,6 +110,57 @@ const Home = () => {
           </div>
           <Slider items={topRatedTVShows} onItemClick={handleItemClick} itemType="tv" />
         </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Tamil Movies</h2>
+            <Link to="/tamil-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedTamilMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Malayalam Movies</h2>
+            <Link to="/malayalam-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedMalayalamMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Telugu Movies</h2>
+            <Link to="/telugu-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedTeluguMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Kannada Movies</h2>
+            <Link to="/kannada-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedKannadaMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Hindi Movies</h2>
+            <Link to="/hindi-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedHindiMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
       </div>
     </div>
   );
