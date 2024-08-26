@@ -12,6 +12,7 @@ import './HeroSlide.css';
 const HeroSlide = ({ movies }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [trailerUrl, setTrailerUrl] = React.useState('');
+  const [activeSlideIndex, setActiveSlideIndex] = React.useState(0);
   const navigate = useNavigate();
 
   const openModal = (movieId) => {
@@ -33,6 +34,10 @@ const HeroSlide = ({ movies }) => {
     navigate(`/movies/${movieId}`);
   };
 
+  const handleSlideChange = (swiper) => {
+    setActiveSlideIndex(swiper.activeIndex);
+  };
+
   return (
     <>
       <Swiper
@@ -40,10 +45,10 @@ const HeroSlide = ({ movies }) => {
         grabCursor={true}
         spaceBetween={0}
         slidesPerView={1}
-        // autoplay={{ delay: 3000 }}
-        autoplay={false}
+        autoplay={{ delay: 4000 }}
+        onSlideChange={handleSlideChange}
       >
-        {movies.map((movie) => (
+        {movies.map((movie, index) => (
           <SwiperSlide key={movie.id}>
             {({ isActive }) => (
               <div
@@ -65,7 +70,9 @@ const HeroSlide = ({ movies }) => {
                       </OutlineButton>
                     </div>
                   </div>
-                  <div className='hero-slide__item__content__poster'>
+                  <div 
+                    className={`hero-slide__item__content__poster animate__animated ${activeSlideIndex === index ? 'animate__zoomIn' : ''}`}
+                  >
                     <img
                       src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                       alt={movie.title}
