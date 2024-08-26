@@ -7,6 +7,12 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  overflow: hidden; /* Ensure content does not overflow */
+  transition: opacity 0.6s ease; /* Fades in the entire slide */
+}
+
+.hero-slide__item.active {
+  opacity: 1;
 }
 
 .hero-slide__item::before {
@@ -33,7 +39,7 @@
 }
 
 .hero-slide__item__content {
-  position: relative;
+  position: relative; /* Ensures poster is positioned relative to this container */
   z-index: 2; /* Ensures content is above the gradients */
   display: flex;
   justify-content: space-between;
@@ -41,29 +47,62 @@
   padding: 0 3rem; /* Adjust padding if needed */
   width: 100%;
   height: 100%;
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(50px); /* Start from lower position */
+  transition: opacity 0.5s ease, transform 0.5s ease; /* Fade-in and slide-up animation */
+}
+
+.hero-slide__item.active .hero-slide__item__content {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Slide up to normal position */
 }
 
 .movieTitle {
   color: white;
   font-size: 82px;
   margin-bottom: 25px;
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(-20px); /* Start from slightly above */
+  transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s; /* Delay for smooth animation */
+}
+
+.hero-slide__item.active .movieTitle {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Move to normal position */
 }
 
 .overview {
   font-weight: 700;
   color: #fff;
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(-20px); /* Start from slightly below */
+  transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s; /* Delay for smooth animation */
+}
+
+.hero-slide__item.active .overview {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Move to normal position */
 }
 
 .btn {
   margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(-30px); /* Start from lower position */
+  transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s; /* Delay for smooth animation */
 }
 
-.btn-watchnow {
-  margin-right: 10px;
+.hero-slide__item.active .btn {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Move to normal position */
 }
 
+.btn-watchnow,
 .btn-watchtrailer {
-  margin-left: 10px;
+  margin: 0;
+  /* padding: 12px 24px;
+  font-size: 16px; */
 }
 
 .hero-slide__item__content__info {
@@ -73,15 +112,22 @@
 .hero-slide__item__content__poster {
   width: 400px; /* Set width for poster */
   height: 600px; /* Set height for poster */
-  position: absolute; /* Position it absolutely within its container */
+  position: relative; 
   right: 10%; /* Adjust positioning to ensure it's inside the slide */
-  top: 50%; /* Center vertically */
+  top:0%; /* Center vertically */
   transform: translateY(-50%); /* Adjust vertical centering */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   color: #fff;
+  opacity: 0; /* Start hidden for animation */
+  transition: opacity 0.6s ease 0.8s, transform 0.6s ease 0.8s; /* Delay for smooth animation */
+}
+
+.hero-slide__item.active .hero-slide__item__content__poster {
+  opacity: 1; /* Fully visible when active */
+  transform: translateY(0); /* Move to normal position */
 }
 
 .hero-slide__item__content__poster img {
@@ -89,8 +135,6 @@
   height: auto;
   border-radius: 20px;
 }
-
-/* Existing styles... */
 
 /* Tablet styles */
 @media screen and (max-width: 1024px) {
@@ -167,7 +211,6 @@
     height: auto; /* Allow the height to adjust based on content */
     width: 90%; /* Use a percentage width to ensure responsiveness */
     max-width: 380px; /* Set a max-width if needed */
-    
   }
 
   .btn-watchnow,

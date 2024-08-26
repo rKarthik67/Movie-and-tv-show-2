@@ -1,12 +1,12 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { Autoplay } from 'swiper/modules'; // Correct import for Autoplay module
+import { Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TrailerModal from './TrailerModal';
 import { API_KEY } from '../api';
-import Button, { OutlineButton } from './Button'; // Import Button and OutlineButton
+import Button, { OutlineButton } from './Button';
 import './HeroSlide.css';
 
 const HeroSlide = ({ movies }) => {
@@ -40,37 +40,40 @@ const HeroSlide = ({ movies }) => {
         grabCursor={true}
         spaceBetween={0}
         slidesPerView={1}
-        autoplay={{ delay: 3000 }}
+        // autoplay={{ delay: 3000 }}
+        autoplay={false}
       >
         {movies.map((movie) => (
           <SwiperSlide key={movie.id}>
-            <div
-              className='hero-slide__item'
-              style={{
-                backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-              }}
-            >
-              <div className='hero-slide__item__content container'>
-                <div className='hero-slide__item__content__info'>
-                  <h2 className='movieTitle'>{movie.title}</h2>
-                  <div className='overview'>{movie.overview}</div>
-                  <div className='btn'>
-                    <Button onClick={() => handleWatchNow(movie.id)} className="btn-watchnow">
-                      Watch Now
-                    </Button>
-                    <OutlineButton onClick={() => openModal(movie.id)} className="btn-watchtrailer">
-                      Watch Trailer
-                    </OutlineButton>
+            {({ isActive }) => (
+              <div
+                className={`hero-slide__item ${isActive ? 'active' : ''}`}
+                style={{
+                  backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+                }}
+              >
+                <div className='hero-slide__item__content container'>
+                  <div className='hero-slide__item__content__info'>
+                    <h2 className='movieTitle'>{movie.title}</h2>
+                    <div className='overview'>{movie.overview}</div>
+                    <div className='btn'>
+                      <Button onClick={() => handleWatchNow(movie.id)} className="btn-watchnow">
+                        Watch Now
+                      </Button>
+                      <OutlineButton onClick={() => openModal(movie.id)} className="btn-watchtrailer">
+                        Watch Trailer
+                      </OutlineButton>
+                    </div>
+                  </div>
+                  <div className='hero-slide__item__content__poster'>
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                      alt={movie.title}
+                    />
                   </div>
                 </div>
-                <div className='hero-slide__item__content__poster'>
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                </div>
               </div>
-            </div>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
