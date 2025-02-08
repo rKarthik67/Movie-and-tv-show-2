@@ -13,6 +13,8 @@ import MalayalamMovies from './components/MalayalamMovies';
 import TeluguMovies from './components/TeluguMovies';
 import KannadaMovies from './components/KannadaMovies';
 import HindiMovies from './components/HindiMovies';
+import TopRatedMovies from './components/TopRatedMovies';
+import TopRatedTvShows from './components/TopRatedTvShows';
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
             <Route path="/movies" element={<Movies />} />
             <Route path="/tvshows" element={<TVShows />} />
             {/* <Route path="/watchlist" element={<Watchlist />} /> */}
+            <Route path="/top-rated-movies" element={<TopRatedMovies />} />
+            <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />
             <Route path="/movies/:id" element={<MovieDetail />} />
             <Route path="/tvshows/:id" element={<TVShowDetail />} />
             <Route path="/tamil-movies" element={<TamilMovies />} />

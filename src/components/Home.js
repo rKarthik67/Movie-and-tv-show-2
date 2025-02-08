@@ -84,7 +84,7 @@ const Home = () => {
         <section>
           <div className='type-section'>
             <h2>Top Rated Movies</h2>
-            <Link to="/movies">
+            <Link to="/top-rated-movies">
               <OutlineButton className="small-for-home-page">View more</OutlineButton>
             </Link>
           </div>
@@ -104,7 +104,7 @@ const Home = () => {
         <section>
           <div className='type-section'>
             <h2>Top Rated TV Shows</h2>
-            <Link to="/tvshows">
+            <Link to="/top-rated-tvshow">
               <OutlineButton className="small-for-home-page">View more</OutlineButton>
             </Link>
           </div>
