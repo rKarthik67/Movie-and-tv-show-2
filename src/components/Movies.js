@@ -16,6 +16,7 @@ const Movies = () => {
     const [genres, setGenres] = useState([]);
     const [selectedYears, setSelectedYears] = useState([]);
     const [years, setYears] = useState([]);
+    const [includeAdult, setIncludeAdult] = useState(false);
 
     useEffect(() => {
         fetchGenres();
@@ -23,11 +24,13 @@ const Movies = () => {
         const searchQuery = searchParams.get('search') || '';
         const genreFilter = searchParams.get('genres') || '';
         const yearFilter = searchParams.get('years') || '';
+        const adultFilter = searchParams.get('adult') === 'true';
         const pageParam = parseInt(searchParams.get('page')) || 1;
         setQuery(searchQuery);
         setSelectedGenres(genreFilter.split(',').filter(Boolean));
         setSelectedYears(yearFilter.split(',').filter(Boolean));
-        fetchMovies(pageParam, searchQuery, genreFilter, yearFilter);
+        setIncludeAdult(adultFilter);
+        fetchMovies(pageParam, searchQuery, genreFilter, yearFilter, adultFilter);
     }, [searchParams]);
 
     const fetchGenres = async () => {
@@ -45,9 +48,9 @@ const Movies = () => {
         setYears(years);
     };
 
-    const fetchMovies = async (page, query = '', genreIds = '', yearIds = '') => {
+    const fetchMovies = async (page, query = '', genreIds = '', yearIds = '', includeAdult = false) => {
         try {
-            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=true&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
+            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=${includeAdult}&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
             const res = await axios.get(url);
             setMovies(res.data.results);
             setTotalPages(res.data.total_pages);
@@ -62,6 +65,7 @@ const Movies = () => {
             search: query,
             genres: selectedGenres.join(','),
             years: selectedYears.join(','),
+            adult: includeAdult.toString(),
             page: 1
         });
     };
@@ -92,6 +96,7 @@ const Movies = () => {
             search: query,
             genres: selectedGenres.join(','),
             years: selectedYears.join(','),
+            adult: includeAdult.toString(),
             page: newPage
         });
     };
@@ -175,6 +180,15 @@ const Movies = () => {
                             {year}
                         </label>
                     ))}
+                    <h3>Adults:</h3>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={includeAdult}
+                            onChange={(e) => setIncludeAdult(e.target.checked)}
+                        />
+                        Include Adult Content
+                    </label>
                 </div>
             </div>
             <div className='grid-view'>
