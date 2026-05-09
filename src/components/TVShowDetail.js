@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from './Slider';
@@ -23,19 +23,7 @@ const TVShowDetail = () => {
   const videoSectionRef = useRef(null);
   const serverSectionRef = useRef(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchShowDetails();
-      await fetchEpisodes(1); // Default to the first season
-      setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=1&e=1`);
-    };
-  
-    fetchData();
-    window.scrollTo(0, 0);
-  }, [id]); // Only include `id` as the dependency
-  
-
-  const fetchShowDetails = async () => {
+  const fetchShowDetails = useCallback(async () => {
     const showRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}`);
     setShow(showRes.data);
     setSeasons(showRes.data.seasons);
@@ -48,23 +36,34 @@ const TVShowDetail = () => {
 
     const similarShowsRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/similar?api_key=${API_KEY}`);
     setSimilarShows(similarShowsRes.data.results);
-  };
+  }, [id]);
 
-  const fetchEpisodes = async (seasonNumber) => {
+  const fetchEpisodes = useCallback(async (seasonNumber) => {
     const episodesRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}?api_key=${API_KEY}`);
     setEpisodes(episodesRes.data.episodes);
-  };
+  }, [id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchShowDetails();
+      await fetchEpisodes(1); // Default to the first season
+      setCurrentServer(`https://player.videasy.net/tv/${id}/1/$1`);
+    };
+
+    fetchData();
+    window.scrollTo(0, 0);
+  }, [id, fetchShowDetails, fetchEpisodes]);
 
   const handleSeasonSelect = async (seasonNumber) => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
     setSelectedEpisode(1);
-    setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${seasonNumber}&e=1`);
+    setCurrentServer(`https://player.videasy.net/tv/${id}/${selectedSeason}/1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
     setSelectedEpisode(episodeNumber);
-    setCurrentServer(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${episodeNumber}`);
+    setCurrentServer(`https://player.videasy.net/tv/${id}/${selectedSeason}/${episodeNumber}`);
   };
 
   const handleServerChange = (serverUrl) => {
@@ -86,7 +85,7 @@ const TVShowDetail = () => {
         background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(https://image.tmdb.org/t/p/original${show.backdrop_path}) no-repeat center center/cover`,
         padding: '100px', color: '#fff', paddingBottom: '60px'
       }}>
-        <div style={{ display: 'flex'}} className='tvshow-details-div'>
+        <div style={{ display: 'flex' }} className='tvshow-details-div'>
           <img className='poster-image' src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ width: '300px', borderRadius: '10px' }} />
           <div className='series-info' style={{ marginLeft: '20px' }}>
             <h1>{show.name}</h1>
@@ -180,7 +179,7 @@ const TVShowDetail = () => {
                     />
                     <p>{episode.name}</p>
                     <h3>Episode {episode.episode_number}</h3>
-                  </div>       
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -200,11 +199,13 @@ const TVShowDetail = () => {
               title="Episode Player"
             ></iframe>
             <div className='server-buttons'>
-              <Button onClick={() => handleServerChange(`https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
+              <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
               <Button onClick={() => handleServerChange(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 2</Button>
               <Button onClick={() => handleServerChange(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 3</Button>
               <Button onClick={() => handleServerChange(`https://moviesapi.club/tv/${id}-${selectedSeason}-${selectedEpisode}`)}>Server 4</Button>
               <Button onClick={() => handleServerChange(`https://player.smashy.stream/tv/${id}?s=${selectedSeason}&e=${selectedEpisode}`)}>Server 5</Button>
+              <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 6</Button>
+              <Button onClick={() => handleServerChange(`https://player.videasy.net/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 7</Button>
             </div>
           </div>
         </div>

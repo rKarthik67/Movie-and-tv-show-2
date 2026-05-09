@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
-import ark from '../assets/arkplay2.png'
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);

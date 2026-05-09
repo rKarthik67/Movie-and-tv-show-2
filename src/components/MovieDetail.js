@@ -38,7 +38,7 @@ const MovieDetail = () => {
 
     useEffect(() => {
         fetchMovieDetails();
-        setCurrentServer(`https://multiembed.mov/?video_id=${id}&tmdb=1`);
+        setCurrentServer(`https://player.videasy.net/movie/${id}`);
         window.scrollTo(0, 0);
     }, [fetchMovieDetails, id]);
 
@@ -113,11 +113,13 @@ const MovieDetail = () => {
                             title="Movie Player"
                         ></iframe>
                         <div className="server-buttons">
-                            <Button onClick={() => handleServerChange(`https://vidsrc.xyz/embed/movie/${id}`)}>Server 1</Button>
+                            <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/movie/${id}`)}>Server 1</Button>
                             <Button onClick={() => handleServerChange(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`)}>Server 2</Button>
                             <Button onClick={() => handleServerChange(`https://multiembed.mov/?video_id=${id}&tmdb=1`)}>Server 3</Button>
                             <Button onClick={() => handleServerChange(`https://moviesapi.club/movie/${id}`)}>Server 4</Button>
                             <Button onClick={() => handleServerChange(`https://player.smashy.stream/movie/${id}`)}>Server 5</Button>
+                            <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/movie/${id}`)}>Server 6</Button>
+                            <Button onClick={() => handleServerChange(`https://player.videasy.net/movie/${id}`)}>Server 7</Button>
                         </div>
                     </div>
                 </div>
@@ -133,6 +135,7 @@ const MovieDetail = () => {
                                 src={`https://www.youtube.com/embed/${video.key}`}
                                 frameBorder="0"
                                 allowFullScreen
+                                title={video.name}
                                 className="video-iframe"
                             ></iframe>
                         </div>
