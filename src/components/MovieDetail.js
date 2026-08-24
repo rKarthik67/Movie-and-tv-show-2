@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -87,14 +87,14 @@ const MovieDetail = () => {
                     }}>
                         {cast.map(member => (
                             <SwiperSlide key={member.cast_id}>
-                                <div style={{ margin: '10px' }}>
+                                <Link to={`/people/${member.id}`} className="cast-member" style={{ margin: '10px' }}>
                                     <img className='cast-image'
                                         src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                                         alt={member.name}
                                         style={{ borderRadius: '10px', width: '100%' }}
                                     />
                                     <p>{member.name}</p>
-                                </div>
+                                </Link>
                             </SwiperSlide>
                         ))}
                     </Swiper>

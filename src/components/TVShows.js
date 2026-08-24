@@ -16,18 +16,24 @@ const TVShows = () => {
   const [genres, setGenres] = useState([]);
   const [selectedYears, setSelectedYears] = useState([]);
   const [years, setYears] = useState([]);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [languages, setLanguages] = useState([]);
 
   useEffect(() => {
     fetchGenres();
+    fetchLanguages();
     fetchYears();
     const searchQuery = searchParams.get('search') || '';
     const genreFilter = searchParams.get('genres') || '';
     const yearFilter = searchParams.get('years') || '';
+    const languageFilter = searchParams.get('language') || '';
     const pageParam = parseInt(searchParams.get('page')) || 1;
     setQuery(searchQuery);
     setSelectedGenres(genreFilter.split(',').filter(Boolean));
     setSelectedYears(yearFilter.split(',').filter(Boolean));
-    fetchShows(pageParam, searchQuery, genreFilter, yearFilter);
+    setSelectedLanguage(languageFilter);
+    fetchShows(pageParam, searchQuery, genreFilter, yearFilter, languageFilter);
   }, [searchParams]);
 
   const fetchGenres = async () => {
@@ -39,15 +45,26 @@ const TVShows = () => {
     }
   };
 
+  const fetchLanguages = async () => {
+    try {
+      const response = await axios.get(`https://api.themoviedb.org/3/configuration/languages?api_key=${API_KEY}`);
+      setLanguages(response.data.filter((language) => language.iso_639_1 && language.iso_639_1 !== 'ko' && language.iso_639_1 !== 'ja'));
+    } catch (error) {
+      console.error('Error fetching languages:', error);
+    }
+  };
+
   const fetchYears = () => {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 1980 + 1 }, (_, i) => 1980 + i);
     setYears(years);
   };
 
-  const fetchShows = async (page, query = '', genreIds = '', yearIds = '') => {
+  const fetchShows = async (page, query = '', genreIds = '', yearIds = '', language = '') => {
     try {
-      const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&first_air_date_year=${yearIds}` : ''}`;
+      const genreFilter = [genreIds, language === 'anime' ? '16' : ''].filter(Boolean).join(',');
+      const languageFilter = language ? `&with_original_language=${language === 'anime' ? 'ja' : language}` : '';
+      const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&page=${page}&with_genres=${genreFilter}${query ? `&with_text_query=${encodeURIComponent(query)}` : ''}${yearIds ? `&first_air_date_year=${yearIds}` : ''}${languageFilter}`;
       const res = await axios.get(url);
       setShows(res.data.results);
       setTotalPages(res.data.total_pages);
@@ -62,6 +79,7 @@ const TVShows = () => {
       search: query,
       genres: selectedGenres.join(','),
       years: selectedYears.join(','),
+      language: selectedLanguage,
       page: 1
     });
   };
@@ -82,9 +100,18 @@ const TVShows = () => {
     );
   };
 
+  const handleLanguageChange = (language) => {
+    setSearchParams({
+      search: query,
+      genres: selectedGenres.join(','),
+      years: selectedYears.join(','),
+      language,
+      page: 1
+    });
+  };
+
   const toggleFilters = () => {
-    const filtersContainer = document.querySelector('.filters-container');
-    filtersContainer.classList.toggle('active');
+    setFiltersOpen((open) => !open);
   };
 
   const changePage = (newPage) => {
@@ -92,6 +119,7 @@ const TVShows = () => {
       search: query,
       genres: selectedGenres.join(','),
       years: selectedYears.join(','),
+      language: selectedLanguage,
       page: newPage
     });
   };
@@ -148,8 +176,17 @@ const TVShows = () => {
         />
         <Button className="small" onClick={handleSearch}>Search</Button>
         <OutlineButton className="small" onClick={toggleFilters}>Filters</OutlineButton>
+        <select className="tv-language-select" value={selectedLanguage} onChange={(event) => handleLanguageChange(event.target.value)} aria-label="Filter TV shows by language">
+          <option value="">All languages</option>
+          <option value="ko">Korean TV Shows</option>
+          <option value="ja">Japanese TV Shows</option>
+          <option value="anime">Anime TV Shows</option>
+          <optgroup label="Other languages">
+            {languages.map((language) => <option key={language.iso_639_1} value={language.iso_639_1}>{language.english_name} ({language.iso_639_1})</option>)}
+          </optgroup>
+        </select>
       </div>
-      <div className="filters-container">
+      <div className={`filters-container ${filtersOpen ? 'active' : ''}`}>
         <div className="filters-grid">
           <h3>Genres:</h3>
           {genres.map(genre => (

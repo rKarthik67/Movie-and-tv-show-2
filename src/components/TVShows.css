@@ -147,6 +147,23 @@
   margin-right: 8px;
 }
 
+.tv-language-select {
+  align-self: center;
+  height: 36px;
+  margin: 10px 0;
+  padding: 4px 6px;
+  border: 1px solid #e61212;
+  border-radius: 4px;
+  background: #0f0f0f;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .tv-language-select {
+    margin: 0 10px 10px;
+  }
+}
+
 .filters-button {
   padding: 10px 20px;
   border: none;

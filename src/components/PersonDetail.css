@@ -1,0 +1,116 @@
+.person-page {
+  color: white;
+  padding: 110px 32px 48px;
+}
+
+.person-header {
+  display: flex;
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto 48px;
+}
+
+.person-profile {
+  width: 250px;
+  height: 375px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.person-profile-placeholder {
+  display: grid;
+  place-items: center;
+  background: #252525;
+  color: #d1d1d1;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.person-summary {
+  max-width: 720px;
+}
+
+.person-summary h1 {
+  margin: 0 0 14px;
+}
+
+.person-eyebrow,
+.person-character {
+  color: #e61212;
+  font-weight: 700;
+}
+
+.person-biography {
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.person-credits {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.person-credit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 20px;
+}
+
+.person-credit-card {
+  color: white;
+  text-decoration: none;
+}
+
+.person-credit-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: outline 0.2s ease;
+}
+
+.person-credit-card:hover img {
+  outline: 2px solid #e61212;
+}
+
+.person-credit-card h3,
+.person-credit-card p {
+  margin: 8px 0 0;
+}
+
+.person-credit-card p {
+  color: #bdbdbd;
+  font-size: 0.85rem;
+}
+
+.person-credit-card .person-character {
+  color: #e61212;
+}
+
+.person-empty {
+  color: #bdbdbd;
+}
+
+@media (max-width: 768px) {
+  .person-page {
+    padding: 100px 16px 32px;
+  }
+
+  .person-header {
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .person-profile {
+    width: 190px;
+    height: 285px;
+  }
+
+  .person-credit-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+  }
+}

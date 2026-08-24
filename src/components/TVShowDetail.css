@@ -331,3 +331,14 @@
         height: 250px;
     }
 }
+
+.cast-member {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cast-member:hover img {
+    outline: 2px solid #e61212;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from './Slider';
 import { API_KEY } from '../api';
@@ -115,14 +115,14 @@ const TVShowDetail = () => {
           >
             {cast.map(member => (
               <SwiperSlide key={member.id}>
-                <div style={{ margin: '10px' }}>
+                <Link to={`/people/${member.id}`} className="cast-member" style={{ margin: '10px' }}>
                   <img
                     src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                     alt={member.name}
                     style={{ borderRadius: '10px', width: '100%' }}
                   />
                   <p>{member.name}</p>
-                </div>
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>

@@ -15,6 +15,8 @@ import KannadaMovies from './components/KannadaMovies';
 import HindiMovies from './components/HindiMovies';
 import TopRatedMovies from './components/TopRatedMovies';
 import TopRatedTvShows from './components/TopRatedTvShows';
+import LanguageMovies from './components/LanguageMovies';
+import PersonDetail from './components/PersonDetail';
 
 
 function App() {
@@ -32,11 +34,14 @@ function App() {
             <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />
             <Route path="/movies/:id" element={<MovieDetail />} />
             <Route path="/tvshows/:id" element={<TVShowDetail />} />
+            <Route path="/people/:id" element={<PersonDetail />} />
             <Route path="/tamil-movies" element={<TamilMovies />} />
             <Route path="/malayalam-movies" element={<MalayalamMovies />} />
             <Route path="/telugu-movies" element={<TeluguMovies />} />
             <Route path="/kannada-movies" element={<KannadaMovies />} />
             <Route path="/hindi-movies" element={<HindiMovies />} />
+            <Route path="/korean-movies" element={<LanguageMovies languageCode="ko" title="Korean Movies" />} />
+            <Route path="/japanese-movies" element={<LanguageMovies languageCode="ja" title="Japanese Movies" />} />
           </Routes>
         </main>
         <Footer />

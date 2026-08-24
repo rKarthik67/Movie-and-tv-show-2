@@ -20,6 +20,8 @@ const Home = () => {
   const [currentlyReleasedTeluguMovies, setCurrentlyReleasedTeluguMovies] = useState([]);
   const [currentlyReleasedKannadaMovies, setCurrentlyReleasedKannadaMovies] = useState([]);
   const [currentlyReleasedHindiMovies, setCurrentlyReleasedHindiMovies] = useState([]);
+  const [currentlyReleasedKoreanMovies, setCurrentlyReleasedKoreanMovies] = useState([]);
+  const [currentlyReleasedJapaneseMovies, setCurrentlyReleasedJapaneseMovies] = useState([]);
   
 
   useEffect(() => {
@@ -50,6 +52,12 @@ const Home = () => {
 
     const currentHindiMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi`);
     setCurrentlyReleasedHindiMovies(currentHindiMoviesRes.data.results);
+
+    const currentKoreanMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc&include_adult=false`);
+    setCurrentlyReleasedKoreanMovies(currentKoreanMoviesRes.data.results.filter((movie) => !movie.adult));
+
+    const currentJapaneseMoviesRes = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=ja&sort_by=popularity.desc&include_adult=false`);
+    setCurrentlyReleasedJapaneseMovies(currentJapaneseMoviesRes.data.results.filter((movie) => !movie.adult));
 
     const showsRes = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`);
     setTVShows(showsRes.data.results);
@@ -159,6 +167,26 @@ const Home = () => {
             </Link>
           </div>
           <Slider items={currentlyReleasedHindiMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Korean Movies</h2>
+            <Link to="/korean-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedKoreanMovies} onItemClick={handleItemClick} itemType="movie" />
+        </section>
+
+        <section>
+          <div className='type-section'>
+            <h2>Japanese Movies</h2>
+            <Link to="/japanese-movies">
+              <OutlineButton className="small-for-home-page">View more</OutlineButton>
+            </Link>
+          </div>
+          <Slider items={currentlyReleasedJapaneseMovies} onItemClick={handleItemClick} itemType="movie" />
         </section>
 
       </div>
