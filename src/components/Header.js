@@ -36,6 +36,7 @@ const Header = () => {
         <Link to="/movies" className="nav-link" onClick={(e) => handleNavClick(e, '/movies')}>Movies</Link>
         <Link to="/tvshows" className="nav-link" onClick={(e) => handleNavClick(e, '/tvshows')}>TV Shows</Link>
         <Link to="/platforms" className="nav-link" onClick={(e) => handleNavClick(e, '/platforms')}>Platforms</Link>
+        <Link to="/credits" className="nav-link" onClick={(e) => handleNavClick(e, '/credits')}>Credits</Link>
         <Link to="/watchlist" className="nav-link" onClick={(e) => handleNavClick(e, '/watchlist')}>Watchlist</Link>
       </nav>
     </header>

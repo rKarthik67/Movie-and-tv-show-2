@@ -1,5 +1,9 @@
 Live: https://arkplay2moviesandtvshows.netlify.app/
 
+# Credits page shortcut
+
+On the Credits page, press `Ctrl + Shift + A` (or `Cmd + Shift + A` on Mac) to toggle adult-person results. This setting has no visible control and is saved in the current browser.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

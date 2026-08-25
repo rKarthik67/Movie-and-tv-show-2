@@ -19,6 +19,7 @@ import TopRatedMovies from './components/TopRatedMovies';
 import TopRatedTvShows from './components/TopRatedTvShows';
 import LanguageMovies from './components/LanguageMovies';
 import PersonDetail from './components/PersonDetail';
+import Credits from './components/Credits';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/tvshows" element={<TVShows />} />
             <Route path="/platforms" element={<Platforms />} />
             <Route path="/platforms/:filterType/:filterId" element={<PlatformResults />} />
+            <Route path="/credits" element={<Credits />} />
             <Route path="/watchlist" element={<Watchlist />} />
             <Route path="/top-rated-movies" element={<TopRatedMovies />} />
             <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />

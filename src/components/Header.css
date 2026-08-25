@@ -101,7 +101,8 @@
 
   .nav-link {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
   }
 
   .nav-link::after {
