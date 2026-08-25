@@ -7,6 +7,8 @@ import Slider from './Slider';
 import { API_KEY } from '../api';
 import './MovieDetail.css';  // Ensure CSS is imported
 import Button from './Button';
+import BookmarkButton from './BookmarkButton';
+import { isInWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 
 const MovieDetail = () => {
     const { id } = useParams();
@@ -14,7 +16,8 @@ const MovieDetail = () => {
     const [cast, setCast] = useState([]);
     const [relatedVideos, setRelatedVideos] = useState([]);
     const [similarMovies, setSimilarMovies] = useState([]);
-    const [currentServer, setCurrentServer] = useState(`https://multiembed.mov/?video_id=${id}&tmdb=1`);
+    const [currentServer, setCurrentServer] = useState(`https://player.videasy.net/movie/${id}`);
+    const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('movie', id));
     const videoSectionRef = useRef(null);
     const navigate = useNavigate();
 
@@ -39,6 +42,7 @@ const MovieDetail = () => {
     useEffect(() => {
         fetchMovieDetails();
         setCurrentServer(`https://player.videasy.net/movie/${id}`);
+        setIsWatchlisted(isInWatchlist('movie', id));
         window.scrollTo(0, 0);
     }, [fetchMovieDetails, id]);
 
@@ -49,6 +53,15 @@ const MovieDetail = () => {
 
     const handlePlayNowClick = () => {
         videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleWatchlistToggle = () => {
+        const added = toggleWatchlistItem('movie', {
+            id,
+            title: movie.title || 'Untitled Movie',
+            posterPath: movie.poster_path,
+        });
+        setIsWatchlisted(added);
     };
 
     const handleItemClick = (id, type) => {
@@ -63,7 +76,14 @@ const MovieDetail = () => {
                 color: '#fff'
             }}>
                 <div style={{ display: 'flex' }} className='movie-details-div'>
-                    <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className='poster-image' />
+                    <div className='poster-bookmark-container'>
+                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className='poster-image' />
+                        <BookmarkButton
+                            isBookmarked={isWatchlisted}
+                            onClick={handleWatchlistToggle}
+                            className='poster-bookmark-button'
+                        />
+                    </div>
                     <div className='movie-info' style={{ marginLeft: '20px' }}>
                         <h1>{movie.title}</h1>
                         <div className="genres">
@@ -73,6 +93,11 @@ const MovieDetail = () => {
                         </div>
                         <p>{movie.overview}</p>
                         <Button className='btn-playnow' onClick={handlePlayNowClick} style={{ margin: '10px 0' }}>Play Now</Button>
+                        <BookmarkButton
+                            isBookmarked={isWatchlisted}
+                            onClick={handleWatchlistToggle}
+                            className='detail-bookmark-button'
+                        />
                     </div>
                 </div>
             </section>
@@ -114,9 +139,8 @@ const MovieDetail = () => {
                         ></iframe>
                         <div className="server-buttons">
                             <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/movie/${id}`)}>Server 1</Button>
-                            <Button onClick={() => handleServerChange(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`)}>Server 2</Button>
-                            <Button onClick={() => handleServerChange(`https://multiembed.mov/?video_id=${id}&tmdb=1`)}>Server 3</Button>
-                            <Button onClick={() => handleServerChange(`https://moviesapi.club/movie/${id}`)}>Server 4</Button>
+                            <Button onClick={() => handleServerChange(`https://vidcore.org/embed/movie/${id}`)}>VidCore</Button>
+                            <Button onClick={() => handleServerChange(`https://vidlink.pro/movie/${id}`)}>VidLink</Button>
                             <Button onClick={() => handleServerChange(`https://player.smashy.stream/movie/${id}`)}>Server 5</Button>
                             <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/movie/${id}`)}>Server 6</Button>
                             <Button onClick={() => handleServerChange(`https://player.videasy.net/movie/${id}`)}>Server 7</Button>

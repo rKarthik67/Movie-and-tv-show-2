@@ -7,6 +7,8 @@ import './TVShowDetail.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import Button from './Button';
+import BookmarkButton from './BookmarkButton';
+import { isInWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 
 const TVShowDetail = () => {
   const { id } = useParams();
@@ -19,6 +21,7 @@ const TVShowDetail = () => {
   const [episodes, setEpisodes] = useState([]);
   const [currentServer, setCurrentServer] = useState('');
   const [selectedEpisode, setSelectedEpisode] = useState(1);
+  const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('tv', id));
   const navigate = useNavigate();
   const videoSectionRef = useRef(null);
   const serverSectionRef = useRef(null);
@@ -47,7 +50,8 @@ const TVShowDetail = () => {
     const fetchData = async () => {
       await fetchShowDetails();
       await fetchEpisodes(1); // Default to the first season
-      setCurrentServer(`https://player.videasy.net/tv/${id}/1/$1`);
+      setCurrentServer(`https://player.videasy.net/tv/${id}/1/1`);
+      setIsWatchlisted(isInWatchlist('tv', id));
     };
 
     fetchData();
@@ -58,7 +62,7 @@ const TVShowDetail = () => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
     setSelectedEpisode(1);
-    setCurrentServer(`https://player.videasy.net/tv/${id}/${selectedSeason}/1`);
+    setCurrentServer(`https://player.videasy.net/tv/${id}/${seasonNumber}/1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
@@ -79,6 +83,15 @@ const TVShowDetail = () => {
     serverSectionRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleWatchlistToggle = () => {
+    const added = toggleWatchlistItem('tv', {
+      id,
+      title: show.name || 'Untitled TV Show',
+      posterPath: show.poster_path,
+    });
+    setIsWatchlisted(added);
+  };
+
   return (
     <div>
       <section className='backdrop-image' style={{
@@ -86,7 +99,14 @@ const TVShowDetail = () => {
         padding: '100px', color: '#fff', paddingBottom: '60px'
       }}>
         <div style={{ display: 'flex' }} className='tvshow-details-div'>
-          <img className='poster-image' src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ width: '300px', borderRadius: '10px' }} />
+          <div className='poster-bookmark-container'>
+            <img className='poster-image' src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ width: '300px', borderRadius: '10px' }} />
+            <BookmarkButton
+              isBookmarked={isWatchlisted}
+              onClick={handleWatchlistToggle}
+              className='poster-bookmark-button'
+            />
+          </div>
           <div className='series-info' style={{ marginLeft: '20px' }}>
             <h1>{show.name}</h1>
             <div className="genres">
@@ -96,6 +116,11 @@ const TVShowDetail = () => {
             </div>
             <p>{show.overview}</p>
             <Button className='btn-playnow' style={{ margin: '10px 0' }} onClick={scrollToServerSection}>Play Now</Button>
+            <BookmarkButton
+              isBookmarked={isWatchlisted}
+              onClick={handleWatchlistToggle}
+              className='detail-bookmark-button'
+            />
           </div>
         </div>
       </section>
@@ -200,9 +225,8 @@ const TVShowDetail = () => {
             ></iframe>
             <div className='server-buttons'>
               <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
-              <Button onClick={() => handleServerChange(`https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 2</Button>
-              <Button onClick={() => handleServerChange(`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`)}>Server 3</Button>
-              <Button onClick={() => handleServerChange(`https://moviesapi.club/tv/${id}-${selectedSeason}-${selectedEpisode}`)}>Server 4</Button>
+              <Button onClick={() => handleServerChange(`https://vidcore.org/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidCore</Button>
+              <Button onClick={() => handleServerChange(`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidLink</Button>
               <Button onClick={() => handleServerChange(`https://player.smashy.stream/tv/${id}?s=${selectedSeason}&e=${selectedEpisode}`)}>Server 5</Button>
               <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 6</Button>
               <Button onClick={() => handleServerChange(`https://player.videasy.net/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 7</Button>

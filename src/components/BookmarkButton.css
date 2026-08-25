@@ -1,0 +1,111 @@
+.bookmark-button {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 10px 0 10px 10px;
+  padding: 0;
+  vertical-align: middle;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.bookmark-button:hover {
+  background: transparent;
+  box-shadow: none;
+}
+
+.bookmark-icon {
+  width: 30px !important;
+  height: 30px !important;
+  color: #fff;
+  fill: currentColor;
+}
+
+.bookmark-button.is-bookmarked .bookmark-icon,
+.bookmark-button.is-bookmarked .bookmark-icon path {
+  color: #8b48f7;
+  fill: url(#ark-bookmark-gradient) #8b48f7 !important;
+}
+
+.bookmark-button.is-bookmarked .bookmark-icon path:first-of-type {
+  opacity: 1;
+}
+
+.bookmark-gradient-definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.poster-bookmark-container {
+  position: relative;
+  z-index: 2;
+  align-self: flex-start;
+}
+
+.poster-bookmark-container .poster-image {
+  display: block;
+}
+
+.bookmark-button.poster-bookmark-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  margin: 8px;
+}
+
+.bookmark-button.detail-bookmark-button {
+  display: none;
+}
+
+.media-grid-card,
+.slider-poster-container {
+  position: relative;
+}
+
+.media-grid-card > a {
+  display: block;
+}
+
+.bookmark-button.card-bookmark-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  margin: 7px;
+}
+
+.card-bookmark-button .bookmark-icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+@media (max-width: 480px) {
+  .bookmark-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bookmark-icon {
+    width: 25px !important;
+    height: 25px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .poster-bookmark-container {
+    display: none;
+  }
+
+  .bookmark-button.detail-bookmark-button {
+    display: inline-flex;
+  }
+}

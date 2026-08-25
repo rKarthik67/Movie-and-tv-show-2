@@ -1,0 +1,267 @@
+.platforms-page,
+.platform-results-page {
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.platforms-hero {
+  min-height: 260px;
+  display: flex;
+  align-items: end;
+  padding: 120px 32px 36px;
+  background-position: center;
+  background-size: cover;
+  box-sizing: border-box;
+}
+
+.platforms-hero h1,
+.platforms-hero p,
+.platform-results-header h1,
+.platform-results-header p {
+  margin: 0;
+}
+
+.platforms-hero p,
+.platform-results-header p {
+  margin-top: 10px;
+  color: #d4d4d4;
+}
+
+.platforms-content,
+.platform-results-page {
+  padding: 30px 32px 60px;
+}
+
+.platform-results-page {
+  padding-top: 130px;
+}
+
+.platform-region {
+  margin-bottom: 32px;
+}
+
+.platform-region label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.platform-region select {
+  border: 1px solid #e61212;
+  border-radius: 5px;
+  padding: 8px;
+  background: #000;
+  color: #fff;
+}
+
+.platform-slider-section {
+  margin: 34px 0;
+}
+
+.platform-slider-section h2 {
+  margin-bottom: 16px;
+}
+
+.platform-swiper .swiper-slide {
+  width: 180px !important;
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+.platform-card {
+  display: block;
+  width: 180px;
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+}
+
+.platform-logo {
+  display: grid;
+  place-items: center;
+  width: 180px;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.platform-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 95%;
+  max-height: 68%;
+  object-fit: contain;
+}
+
+.platform-swiper .swiper-slide .platform-logo img {
+  border-radius: 10px !important;
+}
+
+.platform-logo span {
+  padding: 10px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.platform-card h3 {
+  min-height: 38px;
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+}
+
+.platform-results-header {
+  margin-bottom: 36px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid #2d2d2d;
+}
+
+.selected-platform-brand {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.selected-platform-logo {
+  display: grid;
+  place-items: center;
+  flex: 0 0 180px;
+  width: 180px;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.selected-platform-logo img {
+  width: 86%;
+  height: 76%;
+  object-fit: contain;
+}
+
+.selected-platform-logo span {
+  padding: 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.selected-platform-type {
+  margin: 0 0 5px !important;
+  color: #bdbdbd !important;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.platform-tabs,
+.platform-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.platform-tabs {
+  margin-top: 20px;
+}
+
+.platform-tab {
+  border: 1px solid #e61212;
+  border-radius: 20px;
+  background: transparent;
+  color: #fff;
+  padding: 8px 16px;
+}
+
+.platform-tab.active,
+.platform-tab:hover {
+  background: #e61212;
+  box-shadow: none;
+}
+
+.platform-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.platform-results-grid a {
+  display: block;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+}
+
+.platform-results-grid img,
+.platform-no-poster {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #252525;
+}
+
+.platform-no-poster {
+  display: grid;
+  place-items: center;
+  color: #bdbdbd;
+}
+
+.platform-results-grid h3 {
+  margin: 10px 0 0;
+  font-size: 1rem;
+}
+
+.platform-status {
+  color: #c9c9c9;
+}
+
+.platform-pagination {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+@media (max-width: 768px) {
+  .platforms-hero {
+    min-height: 210px;
+    padding: 95px 15px 24px;
+  }
+
+  .platforms-content,
+  .platform-results-page {
+    padding: 24px 15px 80px;
+  }
+
+  .platform-results-page {
+    padding-top: 110px;
+  }
+
+  .platform-results-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+  }
+
+  .platform-swiper .swiper-slide,
+  .platform-logo,
+  .platform-card {
+    width: 132px !important;
+  }
+
+  .platform-logo {
+    height: 74px;
+  }
+
+  .selected-platform-brand {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .selected-platform-logo {
+    flex-basis: 132px;
+    width: 132px;
+    height: 74px;
+  }
+}

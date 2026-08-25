@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Button.css';
 
-const Button = (props) => {
+const Button = ({ className = '', onClick, style, children, ...buttonProps }) => {
     return (
-        <button className={`btn-btn ${props.className}`} onClick={props.onClick ? () => props.onClick() : null}>
-            {props.children}
+        <button className={`btn-btn ${className}`} style={style} onClick={onClick} {...buttonProps}>
+            {children}
         </button>
     );
 };
@@ -21,6 +21,7 @@ export const OutlineButton = (props) => {
 Button.propTypes = {
     onClick: PropTypes.func,
     className: PropTypes.string,
+    style: PropTypes.object,
     children: PropTypes.node
 };
 

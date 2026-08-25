@@ -4,6 +4,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import Button, { OutlineButton } from './Button'; // Import Button and OutlineButton
+import BookmarkButton from './BookmarkButton';
+import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './Movies.css';
 
 const Movies = () => {
@@ -17,6 +19,22 @@ const Movies = () => {
     const [selectedYears, setSelectedYears] = useState([]);
     const [years, setYears] = useState([]);
     const [includeAdult, setIncludeAdult] = useState(false);
+    const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
+
+    useEffect(() => {
+        const refreshBookmarks = () => {
+            setBookmarkedIds(new Set(getWatchlist('movie').map((item) => String(item.id))));
+        };
+
+        refreshBookmarks();
+        window.addEventListener('ark-play-watchlist-updated', refreshBookmarks);
+        window.addEventListener('storage', refreshBookmarks);
+
+        return () => {
+            window.removeEventListener('ark-play-watchlist-updated', refreshBookmarks);
+            window.removeEventListener('storage', refreshBookmarks);
+        };
+    }, []);
 
     useEffect(() => {
         fetchGenres();
@@ -98,6 +116,24 @@ const Movies = () => {
             years: selectedYears.join(','),
             adult: includeAdult.toString(),
             page: newPage
+        });
+    };
+
+    const handleBookmarkToggle = (movie) => {
+        const added = toggleWatchlistItem('movie', {
+            id: movie.id,
+            title: movie.title || 'Untitled Movie',
+            posterPath: movie.poster_path,
+        });
+
+        setBookmarkedIds((currentIds) => {
+            const updatedIds = new Set(currentIds);
+            if (added) {
+                updatedIds.add(String(movie.id));
+            } else {
+                updatedIds.delete(String(movie.id));
+            }
+            return updatedIds;
         });
     };
 
@@ -193,10 +229,17 @@ const Movies = () => {
             </div>
             <div className='grid-view'>
                 {movies.map(movie => (
-                    <Link key={movie.id} to={`/movies/${movie.id}`}>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} style={{ borderRadius: '10px' }} />
-                        <h3>{movie.title}</h3>
-                    </Link>
+                    <div className="media-grid-card" key={movie.id}>
+                        <Link to={`/movies/${movie.id}`}>
+                            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} style={{ borderRadius: '10px' }} />
+                            <h3>{movie.title}</h3>
+                        </Link>
+                        <BookmarkButton
+                            isBookmarked={bookmarkedIds.has(String(movie.id))}
+                            onClick={() => handleBookmarkToggle(movie)}
+                            className="card-bookmark-button"
+                        />
+                    </div>
                 ))}
             </div>
             {renderPagination()}

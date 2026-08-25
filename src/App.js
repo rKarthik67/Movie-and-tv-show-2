@@ -5,7 +5,9 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Movies from './components/Movies';
 import TVShows from './components/TVShows';
-// import Watchlist from './components/Watchlist';
+import Watchlist from './components/Watchlist';
+import Platforms from './components/Platforms';
+import PlatformResults from './components/PlatformResults';
 import MovieDetail from './components/MovieDetail';
 import TVShowDetail from './components/TVShowDetail';
 import TamilMovies from './components/TamilMovies';
@@ -29,7 +31,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/tvshows" element={<TVShows />} />
-            {/* <Route path="/watchlist" element={<Watchlist />} /> */}
+            <Route path="/platforms" element={<Platforms />} />
+            <Route path="/platforms/:filterType/:filterId" element={<PlatformResults />} />
+            <Route path="/watchlist" element={<Watchlist />} />
             <Route path="/top-rated-movies" element={<TopRatedMovies />} />
             <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />
             <Route path="/movies/:id" element={<MovieDetail />} />

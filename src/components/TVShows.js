@@ -4,6 +4,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import Button, { OutlineButton } from './Button';
+import BookmarkButton from './BookmarkButton';
+import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './TVShows.css';
 
 const TVShows = () => {
@@ -19,6 +21,22 @@ const TVShows = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
+  const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
+
+  useEffect(() => {
+    const refreshBookmarks = () => {
+      setBookmarkedIds(new Set(getWatchlist('tv').map((item) => String(item.id))));
+    };
+
+    refreshBookmarks();
+    window.addEventListener('ark-play-watchlist-updated', refreshBookmarks);
+    window.addEventListener('storage', refreshBookmarks);
+
+    return () => {
+      window.removeEventListener('ark-play-watchlist-updated', refreshBookmarks);
+      window.removeEventListener('storage', refreshBookmarks);
+    };
+  }, []);
 
   useEffect(() => {
     fetchGenres();
@@ -159,6 +177,24 @@ const TVShows = () => {
     );
   };
 
+  const handleBookmarkToggle = (show) => {
+    const added = toggleWatchlistItem('tv', {
+      id: show.id,
+      title: show.name || 'Untitled TV Show',
+      posterPath: show.poster_path,
+    });
+
+    setBookmarkedIds((currentIds) => {
+      const updatedIds = new Set(currentIds);
+      if (added) {
+        updatedIds.add(String(show.id));
+      } else {
+        updatedIds.delete(String(show.id));
+      }
+      return updatedIds;
+    });
+  };
+
   return (
     <div className='tvshows-page'>
       <div className='background-section' style={{ backgroundImage: `url(${bg})` }}>
@@ -216,10 +252,17 @@ const TVShows = () => {
       </div>
       <div className='grid-view'>
         {shows.map(show => (
-          <Link key={show.id} to={`/tvshows/${show.id}`} style={{ margin: '10px' }}>
-            <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ borderRadius: '10px' }} />
-            <h3>{show.name}</h3>
-          </Link>
+          <div className="media-grid-card" key={show.id}>
+            <Link to={`/tvshows/${show.id}`} style={{ margin: '10px' }}>
+              <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ borderRadius: '10px' }} />
+              <h3>{show.name}</h3>
+            </Link>
+            <BookmarkButton
+              isBookmarked={bookmarkedIds.has(String(show.id))}
+              onClick={() => handleBookmarkToggle(show)}
+              className="card-bookmark-button"
+            />
+          </div>
         ))}
       </div>
       {renderPagination()}
