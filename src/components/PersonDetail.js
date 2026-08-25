@@ -2,12 +2,34 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import { API_KEY } from '../api';
+import BookmarkButton from './BookmarkButton';
+import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './PersonDetail.css';
 
 const PersonDetail = () => {
   const { id } = useParams();
   const [person, setPerson] = useState({});
   const [credits, setCredits] = useState([]);
+  const [activeCreditTab, setActiveCreditTab] = useState('movie');
+  const [bookmarkedIds, setBookmarkedIds] = useState({ movie: new Set(), tv: new Set() });
+
+  useEffect(() => {
+    const refreshBookmarks = () => {
+      setBookmarkedIds({
+        movie: new Set(getWatchlist('movie').map((item) => String(item.id))),
+        tv: new Set(getWatchlist('tv').map((item) => String(item.id))),
+      });
+    };
+
+    refreshBookmarks();
+    window.addEventListener('ark-play-watchlist-updated', refreshBookmarks);
+    window.addEventListener('storage', refreshBookmarks);
+
+    return () => {
+      window.removeEventListener('ark-play-watchlist-updated', refreshBookmarks);
+      window.removeEventListener('storage', refreshBookmarks);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPerson = async () => {
@@ -34,6 +56,61 @@ const PersonDetail = () => {
     window.scrollTo(0, 0);
   }, [id]);
 
+  const handleBookmarkToggle = (credit) => {
+    const type = credit.media_type;
+    const added = toggleWatchlistItem(type, {
+      id: credit.id,
+      title: credit.title || credit.name || `Untitled ${type === 'movie' ? 'Movie' : 'TV Show'}`,
+      posterPath: credit.poster_path,
+    });
+
+    setBookmarkedIds((currentIds) => {
+      const updatedIds = new Set(currentIds[type]);
+      if (added) {
+        updatedIds.add(String(credit.id));
+      } else {
+        updatedIds.delete(String(credit.id));
+      }
+      return { ...currentIds, [type]: updatedIds };
+    });
+  };
+
+  const renderCreditSection = (title, type) => {
+    const sectionCredits = credits.filter((credit) => credit.media_type === type);
+
+    return (
+      <section className="person-credit-section">
+        <h2>{title}</h2>
+        {sectionCredits.length ? (
+          <div className="person-credit-grid">
+            {sectionCredits.map((credit) => {
+              const isMovie = type === 'movie';
+              const creditTitle = isMovie ? credit.title : credit.name;
+              const releaseDate = isMovie ? credit.release_date : credit.first_air_date;
+              return (
+                <article className="person-credit-card media-grid-card" key={`${type}-${credit.id}-${credit.character || ''}`}>
+                  <Link to={isMovie ? `/movies/${credit.id}` : `/tvshows/${credit.id}`}>
+                    <img src={`https://image.tmdb.org/t/p/w500${credit.poster_path}`} alt={creditTitle} />
+                    <div>
+                      <h3>{creditTitle}</h3>
+                      <p>{isMovie ? 'Movie' : 'TV Show'}{releaseDate ? ` - ${releaseDate.slice(0, 4)}` : ''}</p>
+                      {credit.character && <p className="person-character">as {credit.character}</p>}
+                    </div>
+                  </Link>
+                  <BookmarkButton
+                    isBookmarked={bookmarkedIds[type].has(String(credit.id))}
+                    onClick={() => handleBookmarkToggle(credit)}
+                    className="card-bookmark-button"
+                  />
+                </article>
+              );
+            })}
+          </div>
+        ) : <p className="person-empty">No {type === 'movie' ? 'movie' : 'TV show'} credits with artwork are available.</p>}
+      </section>
+    );
+  };
+
   return (
     <div className="person-page">
       <section className="person-header">
@@ -49,25 +126,27 @@ const PersonDetail = () => {
 
       <section className="person-credits">
         <h2>Acting Credits</h2>
-        {credits.length ? (
-          <div className="person-credit-grid">
-            {credits.map((credit) => {
-              const isMovie = credit.media_type === 'movie';
-              const title = isMovie ? credit.title : credit.name;
-              const releaseDate = isMovie ? credit.release_date : credit.first_air_date;
-              return (
-                <Link key={`${credit.media_type}-${credit.id}-${credit.character || ''}`} to={isMovie ? `/movies/${credit.id}` : `/tvshows/${credit.id}`} className="person-credit-card">
-                  <img src={`https://image.tmdb.org/t/p/w500${credit.poster_path}`} alt={title} />
-                  <div>
-                    <h3>{title}</h3>
-                    <p>{isMovie ? 'Movie' : 'TV Show'}{releaseDate ? ` - ${releaseDate.slice(0, 4)}` : ''}</p>
-                    {credit.character && <p className="person-character">as {credit.character}</p>}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        ) : <p className="person-empty">No acting credits with artwork are available.</p>}
+        <div className="person-credit-tabs" role="tablist" aria-label="Acting credit type">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeCreditTab === 'movie'}
+            className={activeCreditTab === 'movie' ? 'active' : ''}
+            onClick={() => setActiveCreditTab('movie')}
+          >
+            Movies
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeCreditTab === 'tv'}
+            className={activeCreditTab === 'tv' ? 'active' : ''}
+            onClick={() => setActiveCreditTab('tv')}
+          >
+            TV Shows
+          </button>
+        </div>
+        {renderCreditSection(activeCreditTab === 'movie' ? 'Movies' : 'TV Shows', activeCreditTab)}
       </section>
     </div>
   );

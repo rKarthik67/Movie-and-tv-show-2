@@ -19,6 +19,7 @@ const TVShows = () => {
   const [selectedYears, setSelectedYears] = useState([]);
   const [years, setYears] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [minimumSeasons, setMinimumSeasons] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
@@ -46,11 +47,13 @@ const TVShows = () => {
     const genreFilter = searchParams.get('genres') || '';
     const yearFilter = searchParams.get('years') || '';
     const languageFilter = searchParams.get('language') || '';
+    const seasonFilter = searchParams.get('seasons') || '';
     const pageParam = parseInt(searchParams.get('page')) || 1;
     setQuery(searchQuery);
     setSelectedGenres(genreFilter.split(',').filter(Boolean));
     setSelectedYears(yearFilter.split(',').filter(Boolean));
     setSelectedLanguage(languageFilter);
+    setMinimumSeasons(seasonFilter);
     fetchShows(pageParam, searchQuery, genreFilter, yearFilter, languageFilter);
   }, [searchParams]);
 
@@ -84,7 +87,18 @@ const TVShows = () => {
       const languageFilter = language ? `&with_original_language=${language === 'anime' ? 'ja' : language}` : '';
       const url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&page=${page}&with_genres=${genreFilter}${query ? `&with_text_query=${encodeURIComponent(query)}` : ''}${yearIds ? `&first_air_date_year=${yearIds}` : ''}${languageFilter}`;
       const res = await axios.get(url);
-      setShows(res.data.results);
+      const showsWithSeasonCounts = await Promise.all(
+        res.data.results.map(async (show) => {
+          try {
+            const details = await axios.get(`https://api.themoviedb.org/3/tv/${show.id}?api_key=${API_KEY}`);
+            return { ...show, number_of_seasons: details.data.number_of_seasons };
+          } catch (error) {
+            console.error(`Error fetching season count for ${show.name}:`, error);
+            return show;
+          }
+        })
+      );
+      setShows(showsWithSeasonCounts);
       setTotalPages(res.data.total_pages);
       setPage(page);
     } catch (error) {
@@ -98,6 +112,7 @@ const TVShows = () => {
       genres: selectedGenres.join(','),
       years: selectedYears.join(','),
       language: selectedLanguage,
+      seasons: minimumSeasons,
       page: 1
     });
   };
@@ -124,6 +139,18 @@ const TVShows = () => {
       genres: selectedGenres.join(','),
       years: selectedYears.join(','),
       language,
+      seasons: minimumSeasons,
+      page: 1
+    });
+  };
+
+  const handleMinimumSeasonsChange = (seasons) => {
+    setSearchParams({
+      search: query,
+      genres: selectedGenres.join(','),
+      years: selectedYears.join(','),
+      language: selectedLanguage,
+      seasons,
       page: 1
     });
   };
@@ -138,6 +165,7 @@ const TVShows = () => {
       genres: selectedGenres.join(','),
       years: selectedYears.join(','),
       language: selectedLanguage,
+      seasons: minimumSeasons,
       page: newPage
     });
   };
@@ -195,6 +223,14 @@ const TVShows = () => {
     });
   };
 
+  const visibleShows = shows.filter((show) => (
+    !minimumSeasons || Number(show.number_of_seasons) >= Number(minimumSeasons)
+  ));
+
+  const formatSeasonCount = (count) => (
+    `${count} ${count === 1 ? 'season' : 'seasons'}`
+  );
+
   return (
     <div className='tvshows-page'>
       <div className='background-section' style={{ backgroundImage: `url(${bg})` }}>
@@ -248,14 +284,37 @@ const TVShows = () => {
               {year}
             </label>
           ))}
+          <h3>Seasons:</h3>
+          <label>
+            <input
+              type="radio"
+              name="minimum-seasons"
+              value=""
+              checked={!minimumSeasons}
+              onChange={() => handleMinimumSeasonsChange('')}
+            />
+            All seasons
+          </label>
+          {[1, 3, 5, 7, 9].map((seasons) => (
+            <label key={seasons}>
+              <input
+                type="radio"
+                name="minimum-seasons"
+                value={seasons}
+                checked={minimumSeasons === seasons.toString()}
+                onChange={() => handleMinimumSeasonsChange(seasons.toString())}
+              />
+              {seasons}+ seasons
+            </label>
+          ))}
         </div>
       </div>
       <div className='grid-view'>
-        {shows.map(show => (
+        {visibleShows.map(show => (
           <div className="media-grid-card" key={show.id}>
             <Link to={`/tvshows/${show.id}`} style={{ margin: '10px' }}>
               <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ borderRadius: '10px' }} />
-              <h3>{show.name}</h3>
+              <h3>{show.name} ({formatSeasonCount(show.number_of_seasons ?? 0)})</h3>
             </Link>
             <BookmarkButton
               isBookmarked={bookmarkedIds.has(String(show.id))}
