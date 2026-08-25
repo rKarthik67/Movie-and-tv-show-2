@@ -148,6 +148,30 @@
   text-align: center;
 }
 
+.credits-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 34px auto 0;
+}
+
+.credits-pagination button {
+  min-width: 42px;
+  padding: 10px 14px;
+  border: 1px solid #e61212;
+  border-radius: 5px;
+  background: #0f0f0f;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+}
+
+.credits-pagination button:hover,
+.credits-pagination button.active {
+  background: #e61212;
+}
+
 @media (max-width: 768px) {
   .credits-page {
     padding: 100px 16px 72px;

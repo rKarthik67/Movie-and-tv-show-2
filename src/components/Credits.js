@@ -13,22 +13,25 @@ const CREDIT_FILTERS = [
   { id: 'director', label: 'Directors', matches: (person) => person.known_for_department === 'Directing' },
 ];
 
-const getRandomPages = () => [...new Set(Array.from({ length: 4 }, () => Math.floor(Math.random() * 500) + 1))];
+const getRandomPages = () => [...new Set(Array.from({ length: 10 }, () => Math.floor(Math.random() * 500) + 1))];
 const ADULT_PREFERENCE_KEY = 'ark-play:credits-include-adult';
+const PEOPLE_PER_PAGE = 20;
 
 const Credits = () => {
   const [people, setPeople] = useState([]);
   const [searchResults, setSearchResults] = useState(null);
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [creditPage, setCreditPage] = useState(1);
   const [includeAdult, setIncludeAdult] = useState(() => window.localStorage.getItem(ADULT_PREFERENCE_KEY) === 'true');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const loadRandomPeople = useCallback(async () => {
+  const loadRandomPeople = useCallback(async (appendPeople = false) => {
     setIsLoading(true);
     setError('');
     setSearchResults(null);
+    if (!appendPeople) setCreditPage(1);
 
     try {
       const responses = await Promise.all(
@@ -37,7 +40,13 @@ const Credits = () => {
       const uniquePeople = [...new Map(
         responses.flatMap((response) => response.data.results).map((person) => [person.id, person])
       ).values()];
-      setPeople(uniquePeople);
+      setPeople((currentPeople) => {
+        if (!appendPeople) return uniquePeople;
+
+        return [...new Map(
+          [...currentPeople, ...uniquePeople].map((person) => [person.id, person])
+        ).values()];
+      });
     } catch (requestError) {
       console.error('Error loading credits:', requestError);
       setError('Unable to load people right now. Please try again.');
@@ -53,6 +62,10 @@ const Credits = () => {
   useEffect(() => {
     window.localStorage.setItem(ADULT_PREFERENCE_KEY, includeAdult.toString());
   }, [includeAdult]);
+
+  useEffect(() => {
+    setCreditPage(1);
+  }, [activeFilter, searchResults]);
 
   useEffect(() => {
     const toggleAdultContent = (event) => {
@@ -88,9 +101,46 @@ const Credits = () => {
     }
   };
 
-  const selectedFilter = CREDIT_FILTERS.find((filter) => filter.id === activeFilter);
+  const selectedFilter = CREDIT_FILTERS.find((filter) => filter.id === activeFilter) || CREDIT_FILTERS[0];
   const sourcePeople = searchResults || people;
   const visiblePeople = sourcePeople.filter(selectedFilter.matches);
+  const totalCreditPages = Math.max(1, Math.ceil(visiblePeople.length / PEOPLE_PER_PAGE));
+  const currentCreditPage = Math.min(creditPage, totalCreditPages);
+  const paginatedPeople = visiblePeople.slice(
+    (currentCreditPage - 1) * PEOPLE_PER_PAGE,
+    currentCreditPage * PEOPLE_PER_PAGE
+  );
+
+  const loadMorePeople = async () => {
+    const nextPage = totalCreditPages + 1;
+    await loadRandomPeople(true);
+    setCreditPage(nextPage);
+  };
+
+  const renderPagination = () => {
+    if (totalCreditPages <= 1 && searchResults) return null;
+
+    const startPage = Math.max(1, currentCreditPage - 4);
+    const endPage = Math.min(totalCreditPages, startPage + 9);
+    const pages = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+
+    return (
+      <div className="credits-pagination">
+        {currentCreditPage > 1 ? <button onClick={() => setCreditPage(currentCreditPage - 1)}>&laquo;</button> : null}
+        {pages.map((pageNumber) => (
+          <button
+            key={pageNumber}
+            className={pageNumber === currentCreditPage ? 'active' : ''}
+            onClick={() => setCreditPage(pageNumber)}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        {currentCreditPage < totalCreditPages ? <button onClick={() => setCreditPage(currentCreditPage + 1)}>&raquo;</button> : null}
+        {currentCreditPage === totalCreditPages && !searchResults ? <button onClick={loadMorePeople}>&raquo;</button> : null}
+      </div>
+    );
+  };
 
   return (
     <div className="credits-page">
@@ -111,7 +161,7 @@ const Credits = () => {
           />
           <Button className="small" type="submit">Search</Button>
         </form>
-        <Button className="small credits-refresh" onClick={loadRandomPeople}>Show random people</Button>
+        <Button className="small credits-refresh" onClick={() => loadRandomPeople()}>Show random people</Button>
       </div>
 
       <div className="credits-filters" role="group" aria-label="Filter people by profession">
@@ -133,7 +183,7 @@ const Credits = () => {
 
       {!isLoading && !error && visiblePeople.length > 0 ? (
         <div className="credits-grid">
-          {visiblePeople.map((person) => (
+          {paginatedPeople.map((person) => (
             <Link key={person.id} to={`/people/${person.id}`} className="credit-person-card">
               {person.profile_path ? (
                 <img src={`https://image.tmdb.org/t/p/w500${person.profile_path}`} alt={person.name} />
@@ -146,6 +196,7 @@ const Credits = () => {
           ))}
         </div>
       ) : null}
+      {!isLoading && !error ? renderPagination() : null}
     </div>
   );
 };
