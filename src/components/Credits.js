@@ -27,6 +27,8 @@ const Credits = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const adultToggleTimer = useRef(null);
+  const headingTapCount = useRef(0);
+  const headingTapTimer = useRef(null);
 
   const toggleAdultContent = useCallback(() => {
     setIncludeAdult((current) => !current);
@@ -84,17 +86,37 @@ const Credits = () => {
     return () => window.removeEventListener('keydown', handleKeyboardToggle);
   }, [toggleAdultContent]);
 
-  useEffect(() => () => window.clearTimeout(adultToggleTimer.current), []);
-
-  const startTouchToggle = (event) => {
-    if (event.pointerType !== 'touch') return;
-
+  useEffect(() => () => {
     window.clearTimeout(adultToggleTimer.current);
-    adultToggleTimer.current = window.setTimeout(toggleAdultContent, 2000);
+    window.clearTimeout(headingTapTimer.current);
+  }, []);
+
+  const startTouchToggle = () => {
+    window.clearTimeout(adultToggleTimer.current);
+    adultToggleTimer.current = window.setTimeout(() => {
+      headingTapCount.current = 0;
+      toggleAdultContent();
+    }, 2000);
   };
 
   const cancelTouchToggle = () => {
     window.clearTimeout(adultToggleTimer.current);
+  };
+
+  const handleHeadingTouchEnd = () => {
+    cancelTouchToggle();
+    headingTapCount.current += 1;
+    window.clearTimeout(headingTapTimer.current);
+
+    if (headingTapCount.current === 3) {
+      headingTapCount.current = 0;
+      toggleAdultContent();
+      return;
+    }
+
+    headingTapTimer.current = window.setTimeout(() => {
+      headingTapCount.current = 0;
+    }, 800);
   };
 
   const handleSearch = async (event) => {
@@ -164,10 +186,9 @@ const Credits = () => {
     <div className="credits-page">
       <section
         className="credits-heading"
-        onPointerDown={startTouchToggle}
-        onPointerUp={cancelTouchToggle}
-        onPointerLeave={cancelTouchToggle}
-        onPointerCancel={cancelTouchToggle}
+        onTouchStart={startTouchToggle}
+        onTouchEnd={handleHeadingTouchEnd}
+        onTouchCancel={cancelTouchToggle}
         onContextMenu={(event) => event.preventDefault()}
       >
         <p className="credits-eyebrow">Behind every great story</p>
