@@ -1,9 +1,9 @@
 .swiper-slide img {
-  border-radius: 30px;
+  border-radius: 10px;
   width: 100%;
   height: auto;
   cursor: pointer;
-  background-color: #0f0f0f;
+  background-color: #ffffff;
 }
 
 .swiper-slide h3 {
@@ -31,7 +31,7 @@
     width: 100%;
     height: auto;
     cursor: pointer;
-    background-color: #0f0f0f;
+    background-color: #ffffff;
   }
   
 }
@@ -46,7 +46,7 @@
     width: 100%;
     height: auto;
     cursor: pointer;
-    background-color: #0f0f0f;
+    background-color: #ffffff;
   }
   
 }

@@ -78,34 +78,34 @@
   top: 0;
   right: 0;
   z-index: 3;
-  width: 38px;
-  height: 38px;
-  margin: 7px;
+  width: 30px;
+  height: 15px;
+/*!* margin: 7px;*/
 }
 
 .card-bookmark-button .bookmark-icon {
-  width: 24px !important;
-  height: 24px !important;
+width: 24px !important;
+height: 24px !important;
 }
 
 @media (max-width: 480px) {
-  .bookmark-button {
-    width: 40px;
-    height: 40px;
-  }
+.bookmark-button {
+width: 40px;
+height: 40px;
+}
 
-  .bookmark-icon {
-    width: 25px !important;
-    height: 25px !important;
-  }
+.bookmark-icon {
+width: 25px !important;
+height: 25px !important;
+}
 }
 
 @media (max-width: 768px) {
-  .poster-bookmark-container {
-    display: none;
-  }
+.poster-bookmark-container {
+display: none;
+}
 
-  .bookmark-button.detail-bookmark-button {
-    display: inline-flex;
-  }
+.bookmark-button.detail-bookmark-button {
+display: inline-flex;
+}
 }
