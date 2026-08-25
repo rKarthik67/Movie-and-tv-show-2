@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { API_KEY } from '../api';
@@ -26,6 +26,11 @@ const Credits = () => {
   const [includeAdult, setIncludeAdult] = useState(() => window.localStorage.getItem(ADULT_PREFERENCE_KEY) === 'true');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const adultToggleTimer = useRef(null);
+
+  const toggleAdultContent = useCallback(() => {
+    setIncludeAdult((current) => !current);
+  }, []);
 
   const loadRandomPeople = useCallback(async (appendPeople = false) => {
     setIsLoading(true);
@@ -68,16 +73,29 @@ const Credits = () => {
   }, [activeFilter, searchResults]);
 
   useEffect(() => {
-    const toggleAdultContent = (event) => {
+    const handleKeyboardToggle = (event) => {
       if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'a') {
         event.preventDefault();
-        setIncludeAdult((current) => !current);
+        toggleAdultContent();
       }
     };
 
-    window.addEventListener('keydown', toggleAdultContent);
-    return () => window.removeEventListener('keydown', toggleAdultContent);
-  }, []);
+    window.addEventListener('keydown', handleKeyboardToggle);
+    return () => window.removeEventListener('keydown', handleKeyboardToggle);
+  }, [toggleAdultContent]);
+
+  useEffect(() => () => window.clearTimeout(adultToggleTimer.current), []);
+
+  const startTouchToggle = (event) => {
+    if (event.pointerType !== 'touch') return;
+
+    window.clearTimeout(adultToggleTimer.current);
+    adultToggleTimer.current = window.setTimeout(toggleAdultContent, 2000);
+  };
+
+  const cancelTouchToggle = () => {
+    window.clearTimeout(adultToggleTimer.current);
+  };
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -144,7 +162,14 @@ const Credits = () => {
 
   return (
     <div className="credits-page">
-      <section className="credits-heading">
+      <section
+        className="credits-heading"
+        onPointerDown={startTouchToggle}
+        onPointerUp={cancelTouchToggle}
+        onPointerLeave={cancelTouchToggle}
+        onPointerCancel={cancelTouchToggle}
+        onContextMenu={(event) => event.preventDefault()}
+      >
         <p className="credits-eyebrow">Behind every great story</p>
         <h1>Credits</h1>
         <p>Discover actors, actresses, writers, and directors.</p>
