@@ -19,7 +19,10 @@ const MovieDetail = () => {
     const [currentServer, setCurrentServer] = useState(`https://player.videasy.net/movie/${id}`);
     const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('movie', id));
     const videoSectionRef = useRef(null);
+    const serverTwoClickTimer = useRef(null);
     const navigate = useNavigate();
+
+    useEffect(() => () => window.clearTimeout(serverTwoClickTimer.current), []);
 
     const fetchMovieDetails = useCallback(async () => {
         try {
@@ -53,6 +56,16 @@ const MovieDetail = () => {
 
     const handlePlayNowClick = () => {
         videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleServerTwoClick = (serverUrl) => {
+        window.clearTimeout(serverTwoClickTimer.current);
+        serverTwoClickTimer.current = window.setTimeout(() => window.location.assign(serverUrl), 250);
+    };
+
+    const handleServerTwoDoubleClick = (serverUrl) => {
+        window.clearTimeout(serverTwoClickTimer.current);
+        window.open(serverUrl, '_blank', 'noopener,noreferrer');
     };
 
     const handleWatchlistToggle = () => {
@@ -139,6 +152,12 @@ const MovieDetail = () => {
                         ></iframe>
                         <div className="server-buttons">
                             <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/movie/${id}`)}>Server 1</Button>
+                            <Button
+                                onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/movie/${id}`)}
+                                onDoubleClick={() => handleServerTwoDoubleClick(`https://pro.vidsrc.sbs/embed/movie/${id}`)}
+                            >
+                                Server 2
+                            </Button>
                             <Button onClick={() => handleServerChange(`https://vidcore.org/embed/movie/${id}`)}>VidCore</Button>
                             <Button onClick={() => handleServerChange(`https://vidlink.pro/movie/${id}`)}>VidLink</Button>
                             <Button onClick={() => handleServerChange(`https://player.smashy.stream/movie/${id}`)}>Server 5</Button>

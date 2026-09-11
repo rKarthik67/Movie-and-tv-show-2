@@ -25,6 +25,9 @@ const TVShowDetail = () => {
   const navigate = useNavigate();
   const videoSectionRef = useRef(null);
   const serverSectionRef = useRef(null);
+  const serverTwoClickTimer = useRef(null);
+
+  useEffect(() => () => window.clearTimeout(serverTwoClickTimer.current), []);
 
   const fetchShowDetails = useCallback(async () => {
     const showRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}`);
@@ -81,6 +84,16 @@ const TVShowDetail = () => {
 
   const scrollToServerSection = () => {
     serverSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleServerTwoClick = (serverUrl) => {
+    window.clearTimeout(serverTwoClickTimer.current);
+    serverTwoClickTimer.current = window.setTimeout(() => window.location.assign(serverUrl), 250);
+  };
+
+  const handleServerTwoDoubleClick = (serverUrl) => {
+    window.clearTimeout(serverTwoClickTimer.current);
+    window.open(serverUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleWatchlistToggle = () => {
@@ -225,6 +238,12 @@ const TVShowDetail = () => {
             ></iframe>
             <div className='server-buttons'>
               <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
+              <Button
+                onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}
+                onDoubleClick={() => handleServerTwoDoubleClick(`https://pro.vidsrc.sbs/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}
+              >
+                Server 2
+              </Button>
               <Button onClick={() => handleServerChange(`https://vidcore.org/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidCore</Button>
               <Button onClick={() => handleServerChange(`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidLink</Button>
               <Button onClick={() => handleServerChange(`https://player.smashy.stream/tv/${id}?s=${selectedSeason}&e=${selectedEpisode}`)}>Server 5</Button>
