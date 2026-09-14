@@ -19,6 +19,8 @@ const Movies = () => {
     const [selectedYears, setSelectedYears] = useState([]);
     const [years, setYears] = useState([]);
     const [includeAdult, setIncludeAdult] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [languages, setLanguages] = useState([]);
     const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
 
     useEffect(() => {
@@ -38,17 +40,20 @@ const Movies = () => {
 
     useEffect(() => {
         fetchGenres();
+        fetchLanguages();
         fetchYears();
         const searchQuery = searchParams.get('search') || '';
         const genreFilter = searchParams.get('genres') || '';
         const yearFilter = searchParams.get('years') || '';
         const adultFilter = searchParams.get('adult') === 'true';
+        const languageFilter = searchParams.get('language') || '';
         const pageParam = parseInt(searchParams.get('page')) || 1;
         setQuery(searchQuery);
         setSelectedGenres(genreFilter.split(',').filter(Boolean));
         setSelectedYears(yearFilter.split(',').filter(Boolean));
         setIncludeAdult(adultFilter);
-        fetchMovies(pageParam, searchQuery, genreFilter, yearFilter, adultFilter);
+        setSelectedLanguage(languageFilter);
+        fetchMovies(pageParam, searchQuery, genreFilter, yearFilter, adultFilter, languageFilter);
     }, [searchParams]);
 
     const fetchGenres = async () => {
@@ -66,9 +71,20 @@ const Movies = () => {
         setYears(years);
     };
 
-    const fetchMovies = async (page, query = '', genreIds = '', yearIds = '', includeAdult = false) => {
+    const fetchLanguages = async () => {
         try {
-            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=${includeAdult}&include_video=false&page=${page}&with_genres=${genreIds}${query ? `&with_text_query=${query}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}`;
+            const response = await axios.get(`https://api.themoviedb.org/3/configuration/languages?api_key=${API_KEY}`);
+            setLanguages(response.data.filter((language) => language.iso_639_1 && language.iso_639_1 !== 'ko' && language.iso_639_1 !== 'ja'));
+        } catch (error) {
+            console.error('Error fetching languages:', error);
+        }
+    };
+
+    const fetchMovies = async (page, query = '', genreIds = '', yearIds = '', includeAdult = false, language = '') => {
+        try {
+            const genreFilter = [genreIds, language === 'anime' ? '16' : ''].filter(Boolean).join(',');
+            const languageFilter = language ? `&with_original_language=${language === 'anime' ? 'ja' : language}` : '';
+            const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=${includeAdult}&include_video=false&page=${page}&with_genres=${genreFilter}${query ? `&with_text_query=${encodeURIComponent(query)}` : ''}${yearIds ? `&primary_release_year=${yearIds}` : ''}${languageFilter}`;
             const res = await axios.get(url);
             setMovies(res.data.results);
             setTotalPages(res.data.total_pages);
@@ -84,6 +100,7 @@ const Movies = () => {
             genres: selectedGenres.join(','),
             years: selectedYears.join(','),
             adult: includeAdult.toString(),
+            language: selectedLanguage,
             page: 1
         });
     };
@@ -109,12 +126,24 @@ const Movies = () => {
         filtersContainer.classList.toggle('active');
     };
 
+    const handleLanguageChange = (language) => {
+        setSearchParams({
+            search: query,
+            genres: selectedGenres.join(','),
+            years: selectedYears.join(','),
+            adult: includeAdult.toString(),
+            language,
+            page: 1
+        });
+    };
+
     const changePage = (newPage) => {
         setSearchParams({
             search: query,
             genres: selectedGenres.join(','),
             years: selectedYears.join(','),
             adult: includeAdult.toString(),
+            language: selectedLanguage,
             page: newPage
         });
     };
@@ -189,6 +218,16 @@ const Movies = () => {
                 />
                 <Button className="small" onClick={handleSearch}>Search</Button>
                 <OutlineButton className="small" onClick={toggleFilters}>Filters</OutlineButton>
+                <select className="movie-language-select" value={selectedLanguage} onChange={(event) => handleLanguageChange(event.target.value)} aria-label="Filter movies by language">
+                    <option value="">All languages</option>
+                    <option value="ko">Korean Movies</option>
+                    <option value="ja">Japanese Movies</option>
+                    <option value="zh">Chinese Movies</option>
+                    <option value="anime">Anime Movies</option>
+                    <optgroup label="Other languages">
+                        {languages.filter((language) => language.iso_639_1 !== 'zh').map((language) => <option key={language.iso_639_1} value={language.iso_639_1}>{language.english_name} ({language.iso_639_1})</option>)}
+                    </optgroup>
+                </select>
             </div>
             <div className="filters-container">
                 <div className="filters-grid">

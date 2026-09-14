@@ -252,9 +252,10 @@ const TVShows = () => {
           <option value="">All languages</option>
           <option value="ko">Korean TV Shows</option>
           <option value="ja">Japanese TV Shows</option>
+          <option value="zh">Chinese TV Shows</option>
           <option value="anime">Anime TV Shows</option>
           <optgroup label="Other languages">
-            {languages.map((language) => <option key={language.iso_639_1} value={language.iso_639_1}>{language.english_name} ({language.iso_639_1})</option>)}
+            {languages.filter((language) => language.iso_639_1 !== 'zh').map((language) => <option key={language.iso_639_1} value={language.iso_639_1}>{language.english_name} ({language.iso_639_1})</option>)}
           </optgroup>
         </select>
       </div>
