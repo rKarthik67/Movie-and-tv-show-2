@@ -14,6 +14,21 @@
   background-color: #0f0f0f;
 }
 
+/* Temporary loading state. Once the image is ready, this element is removed
+   and the original slider image rules above apply without alteration. */
+.slider-poster-loading {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface-variant);
+}
+
+.slider-poster-container .poster-pending-image {
+  display: none;
+}
+
 /* Responsive styles */
 @media (max-width: 1024px) {
   .swiper-slide h3 {

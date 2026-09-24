@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import Button, { OutlineButton } from './Button';
-import BookmarkButton from './BookmarkButton';
+import PosterGridCard from './PosterGridCard';
 import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './TVShows.css';
 
@@ -312,17 +312,15 @@ const TVShows = () => {
       </div>
       <div className='grid-view'>
         {visibleShows.map(show => (
-          <div className="media-grid-card" key={show.id}>
-            <Link to={`/tvshows/${show.id}`} style={{ margin: '10px' }}>
-              <img src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} alt={show.name} style={{ borderRadius: '10px' }} />
-              <h3>{show.name} ({formatSeasonCount(show.number_of_seasons ?? 0)})</h3>
-            </Link>
-            <BookmarkButton
-              isBookmarked={bookmarkedIds.has(String(show.id))}
-              onClick={() => handleBookmarkToggle(show)}
-              className="card-bookmark-button"
-            />
-          </div>
+          <PosterGridCard
+            key={show.id}
+            to={`/tvshows/${show.id}`}
+            posterPath={show.poster_path}
+            title={show.name}
+            subtitle={`(${formatSeasonCount(show.number_of_seasons ?? 0)})`}
+            isBookmarked={bookmarkedIds.has(String(show.id))}
+            onBookmarkToggle={() => handleBookmarkToggle(show)}
+          />
         ))}
       </div>
       {renderPagination()}

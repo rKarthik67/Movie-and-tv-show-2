@@ -38,7 +38,7 @@
 
 .person-eyebrow,
 .person-character {
-  color: #e61212;
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .person-credit-tabs button.active {
-  border-bottom-color: #e61212;
+  border-bottom-color: var(--accent);
 }
 
 .person-credit-grid {
@@ -112,7 +112,7 @@
 }
 
 .person-credit-card:hover img {
-  outline: 2px solid #e61212;
+  outline: 2px solid var(--accent);
 }
 
 .person-credit-card h3,
@@ -126,7 +126,7 @@
 }
 
 .person-credit-card .person-character {
-  color: #e61212;
+  color: var(--accent);
 }
 
 .person-empty {

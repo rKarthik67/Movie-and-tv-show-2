@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
 import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import { OTT_PLATFORMS, PRODUCTION_HOUSES } from '../platformFilters';
+import { useThemeSettings } from '../themeSettings';
 import './Platforms.css';
 
-const FilterSlider = ({ title, filters, filterType, region, logos }) => (
-  <section className="platform-slider-section">
+const FilterGrid = ({ title, filters, filterType, region, logos }) => (
+  <section className="platform-grid-section">
     <h2>{title}</h2>
-    <Swiper className="platform-swiper" spaceBetween={14} slidesPerView="auto" grabCursor>
+    <div className="platform-grid">
       {filters.map((filter) => (
-        <SwiperSlide key={`${filterType}-${filter.id}-${filter.name}`}>
+        <div key={`${filterType}-${filter.id}-${filter.name}`}>
           <Link className="platform-card" to={`/platforms/${filterType}/${filter.id}?name=${encodeURIComponent(filter.name)}&region=${region}`}>
             <div className={`platform-logo ${filterType}-logo`}>
               {filter.commonsLogo || logos[filter.id] ? <img src={filter.commonsLogo || `https://image.tmdb.org/t/p/original${logos[filter.id]}`} alt={`${filter.name} logo`} /> : <span>{filter.name}</span>}
             </div>
             <h3>{filter.name}</h3>
           </Link>
-        </SwiperSlide>
+        </div>
       ))}
-    </Swiper>
+    </div>
   </section>
 );
 
 const Platforms = () => {
-  const [region, setRegion] = useState('IN');
+  const { settings, update } = useThemeSettings();
+  const region = settings.watchRegion;
   const [providerLogos, setProviderLogos] = useState({});
   const [companyLogos, setCompanyLogos] = useState({});
+  const [activeTab, setActiveTab] = useState('provider');
 
   useEffect(() => {
     const fetchLogos = async () => {
@@ -60,12 +61,19 @@ const Platforms = () => {
       <div className="platforms-content">
         <div className="platform-region">
           <label htmlFor="platform-region">Streaming region</label>
-          <select id="platform-region" value={region} onChange={(event) => setRegion(event.target.value)}>
+          <select id="platform-region" value={region} onChange={(event) => update({ watchRegion: event.target.value })}>
             <option value="IN">India</option><option value="US">United States</option><option value="GB">United Kingdom</option><option value="CA">Canada</option><option value="AU">Australia</option>
           </select>
         </div>
-        <FilterSlider title="OTT Platforms" filters={OTT_PLATFORMS} filterType="provider" region={region} logos={providerLogos} />
-        <FilterSlider title="Production Houses" filters={PRODUCTION_HOUSES} filterType="company" region={region} logos={companyLogos} />
+        <div className="platform-category-tabs" role="tablist" aria-label="Platform category">
+          <button className={`platform-category-tab ${activeTab === 'provider' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'provider'} onClick={() => setActiveTab('provider')}>OTT Platforms <span>{OTT_PLATFORMS.length}</span></button>
+          <button className={`platform-category-tab ${activeTab === 'company' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'company'} onClick={() => setActiveTab('company')}>Production Houses <span>{PRODUCTION_HOUSES.length}</span></button>
+        </div>
+        {activeTab === 'provider' ? (
+          <FilterGrid title="OTT Platforms" filters={OTT_PLATFORMS} filterType="provider" region={region} logos={providerLogos} />
+        ) : (
+          <FilterGrid title="Production Houses" filters={PRODUCTION_HOUSES} filterType="company" region={region} logos={companyLogos} />
+        )}
       </div>
     </div>
   );

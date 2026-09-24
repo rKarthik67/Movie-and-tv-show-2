@@ -340,5 +340,5 @@
 }
 
 .cast-member:hover img {
-    outline: 2px solid #e61212;
+    outline: 2px solid var(--accent);
 }

@@ -1,0 +1,17 @@
+.appearance-page { max-width: 1040px; margin: 0 auto; padding: 132px 24px 112px; color: var(--text-primary); }
+.appearance-hero { max-width: 620px; margin-bottom: 30px; }
+.appearance-hero h1 { margin: 4px 0 10px; font: 400 clamp(2.5rem, 6vw, 4.6rem)/.95 var(--font-display); }
+.appearance-hero p { color: var(--text-secondary); line-height: 1.6; }
+.eyebrow { color: var(--accent); font-size: .78rem; font-weight: 700; letter-spacing: .18em; }
+.appearance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.settings-group { margin-top: 30px; }.settings-group > h2 { margin: 0 0 12px; font-size: 1.8rem; }.settings-intro { color: var(--text-secondary); line-height: 1.55; }.settings-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.appearance-card { display: grid; gap: 9px; min-height: 128px; padding: 20px; border: 1px solid var(--border); border-radius: 18px; background: var(--glass); backdrop-filter: blur(18px); }
+.appearance-card > span { font-family: var(--font-display); font-size: 1.35rem; }
+.appearance-card small { color: var(--text-secondary); line-height: 1.35; }
+.appearance-card select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary); background: var(--surface-variant); font: .95rem var(--font-ui); }
+.appearance-card input[type='color'] { width: 100%; height: 42px; padding: 2px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-variant); cursor: pointer; }
+.appearance-card input[type='range'] { width: 100%; accent-color: var(--accent); }
+.appearance-toggle { grid-template-columns: 1fr auto; align-items: center; }.appearance-toggle small { grid-column: 1 / -1; }.appearance-toggle input { width: 22px; height: 22px; accent-color: var(--accent); }
+.settings-actions button, .appearance-reset { min-height: 42px; margin: 0; padding: 10px 18px; border-radius: 999px; font: 700 .85rem var(--font-button); }
+.appearance-reset { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+@media (max-width: 680px) { .appearance-page { padding: 104px 16px 110px; }.appearance-grid { grid-template-columns: 1fr; } }

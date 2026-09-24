@@ -4,9 +4,8 @@ import BookmarkButton from './BookmarkButton';
 import { getWatchlist, removeWatchlistItem } from '../watchlistStorage';
 import './Watchlist.css';
 
-const WatchlistSection = ({ title, type, items, onRemove }) => (
+const WatchlistSection = ({ type, items, onRemove }) => (
   <section className="watchlist-section">
-    <h2>{title}</h2>
     {items.length === 0 ? (
       <p className="watchlist-empty">No {type === 'movie' ? 'movies' : 'TV shows'} bookmarked yet.</p>
     ) : (
@@ -31,6 +30,7 @@ const WatchlistSection = ({ title, type, items, onRemove }) => (
 
 const Watchlist = () => {
   const [watchlists, setWatchlists] = useState({ movie: [], tv: [] });
+  const [activeTab, setActiveTab] = useState('movie');
 
   const refreshWatchlists = useCallback(() => {
     setWatchlists({ movie: getWatchlist('movie'), tv: getWatchlist('tv') });
@@ -58,8 +58,11 @@ const Watchlist = () => {
         <h1>My Watchlist</h1>
         <p>Bookmarks are saved in this browser.</p>
       </div>
-      <WatchlistSection title="Movies" type="movie" items={watchlists.movie} onRemove={handleRemove} />
-      <WatchlistSection title="TV Shows" type="tv" items={watchlists.tv} onRemove={handleRemove} />
+      <div className="watchlist-tabs" role="tablist" aria-label="Watchlist type">
+        <button className={`watchlist-tab ${activeTab === 'movie' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'movie'} onClick={() => setActiveTab('movie')}>Movies <span>{watchlists.movie.length}</span></button>
+        <button className={`watchlist-tab ${activeTab === 'tv' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'tv'} onClick={() => setActiveTab('tv')}>TV Shows <span>{watchlists.tv.length}</span></button>
+      </div>
+      <WatchlistSection type={activeTab} items={watchlists[activeTab]} onRemove={handleRemove} />
     </div>
   );
 };

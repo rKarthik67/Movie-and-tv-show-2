@@ -31,7 +31,7 @@
 
 .credits-eyebrow {
   margin: 0 0 6px;
-  color: #e61212;
+  color: var(--accent);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -57,7 +57,7 @@
   min-width: 0;
   height: 42px;
   padding: 0 16px;
-  border: 1px solid #e61212;
+  border: 1px solid var(--accent);
   border-radius: 24px;
   background: #151515;
   color: white;
@@ -89,8 +89,8 @@
 
 .credits-filters button:hover,
 .credits-filters button.active {
-  border-color: #e61212;
-  background: #e61212;
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .credits-grid {
@@ -126,7 +126,7 @@
 
 .credit-person-card:hover img,
 .credit-person-card:hover .credit-person-placeholder {
-  outline: 2px solid #e61212;
+  outline: 2px solid var(--accent);
 }
 
 .credit-person-card h2 {
@@ -160,7 +160,7 @@
 .credits-pagination button {
   min-width: 42px;
   padding: 10px 14px;
-  border: 1px solid #e61212;
+  border: 1px solid var(--accent);
   border-radius: 5px;
   background: #0f0f0f;
   color: white;
@@ -170,7 +170,7 @@
 
 .credits-pagination button:hover,
 .credits-pagination button.active {
-  background: #e61212;
+  background: var(--accent);
 }
 
 @media (max-width: 768px) {

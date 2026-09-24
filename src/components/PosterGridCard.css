@@ -1,0 +1,14 @@
+/* Present only until the image loads; loaded cards return to the old direct
+   img + title + bookmark layout without a permanent wrapper. */
+.poster-loading-boundary { position: relative; width: 100%; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 10px; background: var(--surface-variant); }
+.poster-pending-image { display: none; }
+.poster-skeleton { position: absolute; inset: 0; background: linear-gradient(105deg, var(--surface-variant) 25%, rgba(255,255,255,.08) 42%, var(--surface-variant) 58%); background-size: 220% 100%; animation: poster-shimmer 1.15s linear infinite; }
+.poster-fallback { display: grid; height: 100%; place-items: center; padding: 14px; color: var(--text-secondary); text-align: center; }
+.poster-ready-image { animation: poster-ready .52s both cubic-bezier(.2,.8,.2,1); }
+html[data-motion='fade'] .poster-ready-image { animation-name: ark-fade; }
+html[data-motion='scale'] .poster-ready-image { animation-name: ark-scale; }
+html[data-motion='left'] .poster-ready-image { animation-name: ark-left; }
+html[data-motion='right'] .poster-ready-image { animation-name: ark-right; }
+html[data-motion='none'] .poster-skeleton { animation: none; }
+@keyframes poster-shimmer { to { background-position: -120% 0; } }
+@keyframes poster-ready { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }

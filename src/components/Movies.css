@@ -6,6 +6,14 @@
     background-position: center;
 }
 
+/* Keep the mobile rules above from reverting the unified search control. */
+.movies-page .search-bar { align-items: center !important; gap: 10px; max-width: 720px; margin: 18px auto !important; padding: 10px !important; border: 1px solid var(--border); border-radius: 18px; background: var(--glass); backdrop-filter: blur(18px); }
+.movies-page .search-bar input { min-width: 0; height: 42px !important; margin: 0 !important; padding: 0 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-variant); color: var(--text-primary); font: .95rem var(--font-ui); }
+.movies-page .search-bar input:focus { outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent); border-color: var(--accent); }
+.movies-page .search-bar .btn-btn { min-height: 42px; margin: 0; }
+.movies-page .movie-language-select { height: 42px; margin: 0; border-color: var(--border); border-radius: 12px; background: var(--surface-variant); color: var(--text-primary); font-family: var(--font-ui); }
+@media (max-width: 480px) { .movies-page .search-bar { flex-direction: column; align-items: stretch; }.movies-page .search-bar input { margin: 0; font-size: .85rem; }.movies-page .search-bar .btn-btn { width: 100%; } }
+
 .movies-page .content-container {
     padding-top: 110px;
     margin-bottom: 2rem;
@@ -68,7 +76,7 @@
 
 .movies-page .load-more-button {
     padding: 10px 20px;
-    background-color: red;
+    background-color: var(--accent);
     color: white;
     border: none;
     border-radius: 5px;
@@ -77,8 +85,35 @@
 }
 
 .movies-page .load-more-button:hover {
-    background-color: darkred;
+    background-color: var(--accent);
 }
+
+/* Shared ARK glass search treatment - mirrored in TVShows.css. */
+.movies-page .search-bar {
+    align-items: center;
+    gap: 10px;
+    max-width: 720px;
+    margin: 18px auto;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--glass);
+    backdrop-filter: blur(18px);
+}
+.movies-page .search-bar input {
+    min-width: 0;
+    height: 42px;
+    margin: 0;
+    padding: 0 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-variant);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+}
+.movies-page .search-bar input:focus { outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent); border-color: var(--accent); }
+.movies-page .search-bar .btn-btn { min-height: 42px; margin: 0; }
+.movies-page .movie-language-select { height: 42px; margin: 0; border-color: var(--border); border-radius: 12px; background: var(--surface-variant); color: var(--text-primary); font-family: var(--font-ui); }
 
 .movies-page .search-bar {
     display: flex;
@@ -91,7 +126,7 @@
 .search-bar input {
     flex: 1;
     padding: 9px 15px;
-    border: 2px solid #e61212;
+    border: 2px solid var(--accent);
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     border-radius: 30px;
@@ -105,7 +140,7 @@
 .search-button {
     padding: 10px 20px;
     border: none;
-    background-color: #e61212;
+    background-color: var(--accent);
     color: white;
     font-size: 16px;
     border-radius: 30px;
@@ -122,14 +157,14 @@
     height: 36px;
     margin: 10px 0;
     padding: 4px 6px;
-    border: 1px solid #e61212;
+    border: 1px solid var(--accent);
     border-radius: 20px;
     background: #0f0f0f;
     color: white;
 }
 
 .search-button:hover {
-    background-color: #d40e0e;
+    background-color: var(--accent);
 }
 
 .filters-container {
@@ -169,7 +204,7 @@
 .filters-button {
     padding: 10px 20px;
     border: none;
-    background-color: #e61212;
+    background-color: var(--accent);
     color: white;
     font-size: 16px;
     border-radius: 30px;
@@ -178,7 +213,7 @@
 }
 
 .filters-button:hover {
-    background-color: #d40e0e;
+    background-color: var(--accent);
 }
 
 .pagination-container {
@@ -194,17 +229,17 @@
     margin: 0 5px;
     background-color: #0f0f0f;
     color: white;
-    border: 1px solid #e61212;
+    border: 1px solid var(--accent);
     border-radius: 5px;
     cursor: pointer;
 }
 
 .pagination-button.active {
-    background-color: #e61212;
+    background-color: var(--accent);
 }
 
 .pagination-button:hover {
-    background-color: #d40e0e;
+    background-color: var(--accent);
 }
 
 .pagination-arrow {
@@ -212,13 +247,13 @@
     margin: 0 5px;
     background-color: #0f0f0f;
     color: white;
-    border: 1px solid #e61212;
+    border: 1px solid var(--accent);
     border-radius: 5px;
     cursor: pointer;
 }
 
 .pagination-arrow:hover {
-    background-color: #d40e0e;
+    background-color: var(--accent);
 }
 
 /* Responsive styles */
@@ -239,7 +274,7 @@
 
     .pagination-button.active, .pagination-button:hover,
     .pagination-arrow:hover {
-        background-color: #d40e0e;
+        background-color: var(--accent);
     }
 }
 
@@ -324,6 +359,6 @@
 
     .pagination-button.active, .pagination-button:hover,
     .pagination-arrow:hover {
-        background-color: #d40e0e;
+        background-color: var(--accent);
     }
 }

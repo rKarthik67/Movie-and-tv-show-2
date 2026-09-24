@@ -55,6 +55,6 @@
   }
   
   .footer__content__menu a:hover {
-    color: red;
+    color: var(--accent);
   }
   

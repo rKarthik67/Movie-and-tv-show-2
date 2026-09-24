@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import BookmarkButton from './BookmarkButton';
 import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
+import './PosterGridCard.css';
 import './Slider.css';
 
 const Slider = ({ items, onItemClick, itemType }) => {
@@ -56,10 +57,9 @@ const Slider = ({ items, onItemClick, itemType }) => {
         <SwiperSlide key={item.id} onClick={() => onItemClick(item.id, itemType)}>
           <div className="slider-card">
             <div className="slider-poster-container">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                alt={item.title || item.name}
-                className="swiper-slide-img"
+              <SliderPoster
+                posterPath={item.poster_path}
+                title={item.title || item.name}
               />
               <BookmarkButton
                 isBookmarked={bookmarkedIds.has(String(item.id))}
@@ -72,6 +72,31 @@ const Slider = ({ items, onItemClick, itemType }) => {
         </SwiperSlide>
       ))}
     </Swiper>
+  );
+};
+
+// This returns the original direct <img> once loaded. The boundary exists
+// only while the remote poster is downloading, so it never changes slider
+// sizing, poster position, or bookmark placement in the finished card.
+const SliderPoster = ({ posterPath, title }) => {
+  const [isReady, setIsReady] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return <div className="slider-poster-loading poster-fallback">No poster available</div>;
+  }
+
+  return (
+    <>
+      {!isReady && <div className="slider-poster-loading"><div className="poster-skeleton" aria-hidden="true" /></div>}
+      <img
+        src={`https://image.tmdb.org/t/p/w500${posterPath}`}
+        alt={title}
+        className={isReady ? 'swiper-slide-img poster-ready-image' : 'swiper-slide-img poster-pending-image'}
+        onLoad={() => setIsReady(true)}
+        onError={() => setHasError(true)}
+      />
+    </>
   );
 };
 

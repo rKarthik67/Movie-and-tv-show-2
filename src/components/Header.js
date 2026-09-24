@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import MovieRoundedIcon from '@mui/icons-material/MovieRounded';
+import LiveTvRoundedIcon from '@mui/icons-material/LiveTvRounded';
+import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
+import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
+import ContactsRoundedIcon from '@mui/icons-material/ContactsRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import './Header.css';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,24 +26,24 @@ const Header = () => {
     };
   }, []);
 
-  const handleNavClick = (e, path) => {
-    e.preventDefault();
-    navigate(path);
-  };
+  const links = [
+    ['/', 'Home', <HomeRoundedIcon />], ['/movies', 'Movies', <MovieRoundedIcon />],
+    ['/tvshows', 'TV Shows', <LiveTvRoundedIcon />], ['/platforms', 'Platforms', <AppsRoundedIcon />],
+    ['/credits', 'Credits', <ContactsRoundedIcon />],
+    ['/watchlist', 'Watchlist', <BookmarkRoundedIcon />], ['/settings', 'Settings', <SettingsRoundedIcon />],
+  ];
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="logo">
-        {/* <img className="ark" src={ark} alt="" style={{width: '50px'}}/> */}
-        ARK PLAY
+        ARK<span>PLAY</span>
       </div>
       <nav className="nav">
-        <Link to="/" className="nav-link" onClick={(e) => handleNavClick(e, '/')}>Home</Link>
-        <Link to="/movies" className="nav-link" onClick={(e) => handleNavClick(e, '/movies')}>Movies</Link>
-        <Link to="/tvshows" className="nav-link" onClick={(e) => handleNavClick(e, '/tvshows')}>TV Shows</Link>
-        <Link to="/platforms" className="nav-link" onClick={(e) => handleNavClick(e, '/platforms')}>Platforms</Link>
-        <Link to="/credits" className="nav-link" onClick={(e) => handleNavClick(e, '/credits')}>Credits</Link>
-        <Link to="/watchlist" className="nav-link" onClick={(e) => handleNavClick(e, '/watchlist')}>Watchlist</Link>
+        {links.map(([path, label, icon]) => (
+          <NavLink key={path} to={path} end={path === '/'} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            {icon}<span>{label}</span>
+          </NavLink>
+        ))}
       </nav>
     </header>
   );

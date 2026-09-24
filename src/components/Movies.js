@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import Button, { OutlineButton } from './Button'; // Import Button and OutlineButton
-import BookmarkButton from './BookmarkButton';
+import PosterGridCard from './PosterGridCard';
 import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './Movies.css';
 
@@ -268,17 +268,14 @@ const Movies = () => {
             </div>
             <div className='grid-view'>
                 {movies.map(movie => (
-                    <div className="media-grid-card" key={movie.id}>
-                        <Link to={`/movies/${movie.id}`}>
-                            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} style={{ borderRadius: '10px' }} />
-                            <h3>{movie.title}</h3>
-                        </Link>
-                        <BookmarkButton
-                            isBookmarked={bookmarkedIds.has(String(movie.id))}
-                            onClick={() => handleBookmarkToggle(movie)}
-                            className="card-bookmark-button"
-                        />
-                    </div>
+                    <PosterGridCard
+                        key={movie.id}
+                        to={`/movies/${movie.id}`}
+                        posterPath={movie.poster_path}
+                        title={movie.title}
+                        isBookmarked={bookmarkedIds.has(String(movie.id))}
+                        onBookmarkToggle={() => handleBookmarkToggle(movie)}
+                    />
                 ))}
             </div>
             {renderPagination()}

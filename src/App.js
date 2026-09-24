@@ -20,15 +20,18 @@ import TopRatedTvShows from './components/TopRatedTvShows';
 import LanguageMovies from './components/LanguageMovies';
 import PersonDetail from './components/PersonDetail';
 import Credits from './components/Credits';
+import Settings from './components/Settings';
+import { ThemeSettingsProvider } from './themeSettings';
 
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <main>
-          <Routes>
+    <ThemeSettingsProvider>
+      <Router>
+        <div className="App">
+          <Header />
+          <main>
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/tvshows" element={<TVShows />} />
@@ -48,11 +51,13 @@ function App() {
             <Route path="/hindi-movies" element={<HindiMovies />} />
             <Route path="/korean-movies" element={<LanguageMovies languageCode="ko" title="Korean Movies" />} />
             <Route path="/japanese-movies" element={<LanguageMovies languageCode="ja" title="Japanese Movies" />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </ThemeSettingsProvider>
   );
 }
 

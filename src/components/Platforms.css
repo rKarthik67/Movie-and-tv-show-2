@@ -47,31 +47,51 @@
 }
 
 .platform-region select {
-  border: 1px solid #e61212;
+  border: 1px solid var(--accent);
   border-radius: 5px;
   padding: 8px;
   background: #000;
   color: #fff;
 }
 
-.platform-slider-section {
+.platform-category-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.platform-category-tab {
+  margin: 0;
+  padding: 10px 16px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.platform-category-tab:hover { background: transparent; color: var(--text-primary); transform: none; }
+.platform-category-tab.active { color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+.platform-category-tab span { display: inline-grid; min-width: 20px; place-items: center; margin-left: 5px; padding: 1px 5px; border-radius: 999px; background: var(--surface-variant); color: inherit; font-size: .75rem; }
+
+.platform-grid-section {
   margin: 34px 0;
 }
 
-.platform-slider-section h2 {
+.platform-grid-section h2 {
   margin-bottom: 16px;
 }
 
-.platform-swiper .swiper-slide {
-  width: 180px !important;
-  display: block;
-  padding: 0;
-  background: transparent;
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
 }
 
 .platform-card {
   display: block;
-  width: 180px;
+  width: 100%;
   color: #ffffff;
   text-decoration: none;
   text-align: center;
@@ -80,8 +100,9 @@
 .platform-logo {
   display: grid;
   place-items: center;
-  width: 180px;
-  height: 180px;
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
   overflow: hidden;
   border-radius: 10px;
   background: #ffffff;
@@ -94,10 +115,6 @@
   max-width: 95%;
   max-height: 68%;
   object-fit: contain;
-}
-
-.platform-swiper .swiper-slide .platform-logo img {
-  border-radius: 10px !important;
 }
 
 .platform-logo span {
@@ -168,7 +185,7 @@
 }
 
 .platform-tab {
-  border: 1px solid #e61212;
+  border: 1px solid var(--accent);
   border-radius: 20px;
   background: transparent;
   color: #fff;
@@ -177,7 +194,7 @@
 
 .platform-tab.active,
 .platform-tab:hover {
-  background: #e61212;
+  background: var(--accent);
   box-shadow: none;
 }
 
@@ -244,15 +261,7 @@
     gap: 14px;
   }
 
-  .platform-swiper .swiper-slide,
-  .platform-logo,
-  .platform-card {
-    width: 132px !important;
-  }
-
-  .platform-logo {
-    height: 74px;
-  }
+  .platform-grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 14px; }
 
   .selected-platform-brand {
     align-items: flex-start;
