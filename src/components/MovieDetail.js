@@ -16,7 +16,7 @@ const MovieDetail = () => {
     const [cast, setCast] = useState([]);
     const [relatedVideos, setRelatedVideos] = useState([]);
     const [similarMovies, setSimilarMovies] = useState([]);
-    const [currentServer, setCurrentServer] = useState(`https://player.videasy.net/movie/${id}`);
+    const [currentServer, setCurrentServer] = useState(`https://vidsync.pro/embed/movie/${id}`);
     const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('movie', id));
     const videoSectionRef = useRef(null);
     const serverTwoClickTimer = useRef(null);
@@ -44,7 +44,7 @@ const MovieDetail = () => {
 
     useEffect(() => {
         fetchMovieDetails();
-        setCurrentServer(`https://player.videasy.net/movie/${id}`);
+        setCurrentServer(`https://vidsync.pro/embed/movie/${id}`);
         setIsWatchlisted(isInWatchlist('movie', id));
         window.scrollTo(0, 0);
     }, [fetchMovieDetails, id]);
@@ -151,6 +151,8 @@ const MovieDetail = () => {
                             title="Movie Player"
                         ></iframe>
                         <div className="server-buttons">
+                            <Button onClick={() => handleServerChange(`https://vidsync.pro/embed/movie/${id}`)}>VidSync</Button>
+                            <Button onClick={() => handleServerChange(`https://www.moviesnexus.fun/movie/${id}?sv=multiaudio2`)}>MoviesNexus</Button>
                             <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/movie/${id}`)}>Server 1</Button>
                             <Button
                                 onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/movie/${id}`)}

@@ -53,7 +53,7 @@ const TVShowDetail = () => {
     const fetchData = async () => {
       await fetchShowDetails();
       await fetchEpisodes(1); // Default to the first season
-      setCurrentServer(`https://player.videasy.net/tv/${id}/1/1`);
+      setCurrentServer(`https://vidsync.pro/embed/tv/${id}/1/1`);
       setIsWatchlisted(isInWatchlist('tv', id));
     };
 
@@ -65,12 +65,12 @@ const TVShowDetail = () => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
     setSelectedEpisode(1);
-    setCurrentServer(`https://player.videasy.net/tv/${id}/${seasonNumber}/1`);
+    setCurrentServer(`https://vidsync.pro/embed/tv/${id}/${seasonNumber}/1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
     setSelectedEpisode(episodeNumber);
-    setCurrentServer(`https://player.videasy.net/tv/${id}/${selectedSeason}/${episodeNumber}`);
+    setCurrentServer(`https://vidsync.pro/embed/tv/${id}/${selectedSeason}/${episodeNumber}`);
   };
 
   const handleServerChange = (serverUrl) => {
@@ -237,6 +237,8 @@ const TVShowDetail = () => {
               title="Episode Player"
             ></iframe>
             <div className='server-buttons'>
+              <Button onClick={() => handleServerChange(`https://vidsync.pro/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidSync</Button>
+              <Button onClick={() => handleServerChange(`https://www.moviesnexus.fun/tv/${id}/${selectedSeason}/${selectedEpisode}?sv=multiaudio2`)}>MoviesNexus</Button>
               <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
               <Button
                 onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}
