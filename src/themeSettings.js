@@ -59,7 +59,13 @@ export function ThemeSettingsProvider({ children }) {
     root.style.setProperty('--font-ui', `'${settings.bodyFont}', sans-serif`);
     root.style.setProperty('--font-display', `'${settings.displayFont}', serif`);
     root.style.setProperty('--accent', settings.accent);
+    // The chosen theme color drives the entire dark palette, not only buttons.
+    root.style.setProperty('--background', `color-mix(in srgb, ${settings.accent} 9%, #08090d)`);
+    root.style.setProperty('--surface', `color-mix(in srgb, ${settings.accent} 13%, #101116)`);
+    root.style.setProperty('--surface-variant', `color-mix(in srgb, ${settings.accent} 19%, #12141a)`);
+    root.style.setProperty('--border', `color-mix(in srgb, ${settings.accent} 35%, #292c34)`);
     root.style.setProperty('--glass-alpha', String(Math.min(.92, .08 + (settings.glassOpacity * .13))));
+    root.style.setProperty('--glass', `color-mix(in srgb, var(--surface) ${Math.round(Math.min(.92, .08 + (settings.glassOpacity * .13)) * 100)}%, transparent)`);
     root.style.setProperty('--text-scale', String(settings.textScale));
     root.style.setProperty('--animation-color', settings.animationColor);
     Object.entries(settings.categoryFonts).forEach(([category, font]) => root.style.setProperty(`--font-${category}`, `'${font}', sans-serif`));

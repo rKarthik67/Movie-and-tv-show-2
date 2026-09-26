@@ -15,6 +15,7 @@ const categories = [
 ];
 
 const regions = [['IN', 'India'], ['US', 'United States'], ['GB', 'United Kingdom'], ['CA', 'Canada'], ['AU', 'Australia']];
+const themeColors = [['#E0A83A', 'Gold'], ['#E5484D', 'Rose'], ['#8E5CF7', 'Violet'], ['#1686F2', 'Blue'], ['#16A56A', 'Emerald'], ['#F06D2F', 'Orange']];
 
 const Settings = () => {
   const { settings, update, updateCategoryFont, updateCategoryColor, reset } = useThemeSettings();
@@ -91,7 +92,7 @@ const Settings = () => {
           <RangeCard label="Text size" value={settings.textScale} min=".85" max="1.4" step=".05" text={`${Math.round(settings.textScale * 100)}%`} onChange={(textScale) => update({ textScale: Number(textScale) })} />
           <ChoiceCard label="Body & UI font" value={settings.bodyFont} onChange={(bodyFont) => update({ bodyFont })} help="Navigation, metadata, buttons, and general copy." />
           <ChoiceCard label="Display font" value={settings.displayFont} onChange={(displayFont) => update({ displayFont })} help="Hero titles and section headings." />
-          <label className="appearance-card"><span>Accent color</span><input type="color" value={settings.accent} onChange={(event) => update({ accent: event.target.value })} /><small>Active navigation, buttons, highlights, and focus rings.</small></label>
+          <label className="appearance-card theme-color-card"><span>App theme color</span><div className="theme-swatches" role="group" aria-label="Theme color presets">{themeColors.map(([color, name]) => <button type="button" key={color} className="theme-swatch" style={{ '--swatch-color': color }} aria-label={`${name} theme`} aria-pressed={settings.accent.toLowerCase() === color.toLowerCase()} onClick={() => update({ accent: color, animationColor: color })} />)}</div><input type="color" value={settings.accent} onChange={(event) => update({ accent: event.target.value })} /><small>Changes the app’s accent, background tint, surfaces, borders, and highlights.</small></label>
         </div>
       </SettingsGroup>
       <SettingsGroup title="Motion">

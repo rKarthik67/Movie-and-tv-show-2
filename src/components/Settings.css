@@ -10,8 +10,9 @@
 .appearance-card small { color: var(--text-secondary); line-height: 1.35; }
 .appearance-card select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary); background: var(--surface-variant); font: .95rem var(--font-ui); }
 .appearance-card input[type='color'] { width: 100%; height: 42px; padding: 2px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-variant); cursor: pointer; }
+.theme-color-card { grid-column: span 2; }.theme-swatches { display: flex; flex-wrap: wrap; gap: 10px; }.theme-swatch { width: 34px; height: 34px; min-height: 34px; padding: 0; border: 2px solid transparent; border-radius: 50%; background: var(--swatch-color); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); cursor: pointer; }.theme-swatch[aria-pressed='true'] { border-color: var(--text-primary); box-shadow: 0 0 0 3px var(--accent), inset 0 0 0 1px rgba(255,255,255,.2); }
 .appearance-card input[type='range'] { width: 100%; accent-color: var(--accent); }
 .appearance-toggle { grid-template-columns: 1fr auto; align-items: center; }.appearance-toggle small { grid-column: 1 / -1; }.appearance-toggle input { width: 22px; height: 22px; accent-color: var(--accent); }
 .settings-actions button, .appearance-reset { min-height: 42px; margin: 0; padding: 10px 18px; border-radius: 999px; font: 700 .85rem var(--font-button); }
 .appearance-reset { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
-@media (max-width: 680px) { .appearance-page { padding: 104px 16px 110px; }.appearance-grid { grid-template-columns: 1fr; } }
+@media (max-width: 680px) { .appearance-page { padding: 104px 16px 110px; }.appearance-grid { grid-template-columns: 1fr; }.theme-color-card { grid-column: auto; } }
