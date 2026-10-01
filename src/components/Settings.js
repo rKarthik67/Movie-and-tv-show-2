@@ -1,7 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { animationChoices, fontChoices, useThemeSettings } from '../themeSettings';
-import { getWatchlist } from '../watchlistStorage';
+import {
+  clearWatchlist as clearStoredWatchlist,
+  createSharedPairingCode,
+  createSharedWatchlist,
+  disconnectSharedWatchlist,
+  getWatchlist,
+  isSharedWatchlist,
+  joinSharedWatchlist,
+  syncSharedWatchlist,
+} from '../watchlistStorage';
 import './Settings.css';
 
 const categories = [
@@ -20,6 +29,7 @@ const themeColors = [['#E0A83A', 'Gold'], ['#E5484D', 'Rose'], ['#8E5CF7', 'Viol
 const Settings = () => {
   const { settings, update, updateCategoryFont, updateCategoryColor, reset } = useThemeSettings();
   const importInput = useRef(null);
+  const [shared, setShared] = useState(() => isSharedWatchlist());
 
   const exportWatchlist = () => {
     const contents = JSON.stringify({
@@ -71,8 +81,31 @@ const Settings = () => {
   };
   const clearWatchlist = () => {
     if (!window.confirm('Clear every bookmarked movie and TV show?')) return;
-    localStorage.setItem('ark-play:movie-watchlist', '[]'); localStorage.setItem('ark-play:tv-watchlist', '[]');
-    window.dispatchEvent(new Event('ark-play-watchlist-updated'));
+    clearStoredWatchlist();
+  };
+  const withSharedError = async (action) => {
+    try { await action(); } catch (error) { window.alert(error.message || 'Shared watchlist request failed.'); }
+  };
+  const createShared = () => withSharedError(async () => {
+    await createSharedWatchlist(); setShared(true);
+    window.alert('Shared watchlist created. Use “Add device” to create a code.');
+  });
+  const joinShared = () => withSharedError(async () => {
+    const code = window.prompt('Enter the four-digit code from a linked device:');
+    if (!code) return;
+    await joinSharedWatchlist(code.trim()); setShared(true);
+    window.alert('This browser is now connected to the shared watchlist.');
+  });
+  const syncShared = () => withSharedError(async () => {
+    await syncSharedWatchlist(); window.alert('Shared watchlist synced.');
+  });
+  const addDevice = () => withSharedError(async () => {
+    const pairing = await createSharedPairingCode();
+    window.alert(`Enter this code on the other device within four minutes:\n\n${pairing.code}`);
+  });
+  const disconnectShared = () => {
+    if (!window.confirm('Disconnect this browser? Local titles stay here and other linked devices remain connected.')) return;
+    disconnectSharedWatchlist(); setShared(false);
   };
   const clearImageCache = async () => {
     if ('caches' in window) await Promise.all((await caches.keys()).map((key) => caches.delete(key)));
@@ -85,6 +118,9 @@ const Settings = () => {
 
       <SettingsGroup title="Library">
         <div className="settings-actions"><Link className="appearance-reset" to="/watchlist">My Watchlist</Link><button type="button" onClick={exportWatchlist}>Export watchlist</button><button type="button" onClick={() => importInput.current?.click()}>Import watchlist</button><input ref={importInput} hidden type="file" accept="application/json" onChange={importWatchlist} /></div>
+        <div className="settings-actions shared-watchlist-actions">
+          {shared ? <><button type="button" onClick={syncShared}>Sync now</button><button type="button" onClick={addDevice}>Add device</button><button className="appearance-reset" type="button" onClick={disconnectShared}>Disconnect shared watchlist</button></> : <><button type="button" onClick={createShared}>Create shared watchlist</button><button type="button" onClick={joinShared}>Join with code</button></>}
+        </div>
       </SettingsGroup>
       <SettingsGroup title="Appearance">
         <div className="appearance-grid">

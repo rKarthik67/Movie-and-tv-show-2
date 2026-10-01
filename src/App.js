@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -22,9 +22,12 @@ import PersonDetail from './components/PersonDetail';
 import Credits from './components/Credits';
 import Settings from './components/Settings';
 import { ThemeSettingsProvider } from './themeSettings';
+import { startSharedWatchlistPolling } from './watchlistStorage';
 
 
 function App() {
+  useEffect(() => startSharedWatchlistPolling(), []);
+
   return (
     <ThemeSettingsProvider>
       <Router>
