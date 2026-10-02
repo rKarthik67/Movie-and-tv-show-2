@@ -31,6 +31,7 @@ const WatchlistSection = ({ type, items, onRemove }) => (
 const Watchlist = () => {
   const [watchlists, setWatchlists] = useState({ movie: [], tv: [] });
   const [activeTab, setActiveTab] = useState('movie');
+  const [query, setQuery] = useState('');
 
   const refreshWatchlists = useCallback(() => {
     setWatchlists({ movie: getWatchlist('movie'), tv: getWatchlist('tv') });
@@ -52,17 +53,31 @@ const Watchlist = () => {
     refreshWatchlists();
   };
 
+  const shownItems = watchlists[activeTab].filter((item) => {
+    const search = query.trim().toLowerCase();
+    if (!search) return true;
+    return item.title?.toLowerCase().includes(search) ||
+      String(item.releaseDate || '').includes(search);
+  });
+
   return (
     <div className="watchlist-page">
       <div className="watchlist-heading">
         <h1>My Watchlist</h1>
-        <p>Bookmarks are saved in this browser.</p>
+        <p>Newest additions appear first.</p>
       </div>
       <div className="watchlist-tabs" role="tablist" aria-label="Watchlist type">
         <button className={`watchlist-tab ${activeTab === 'movie' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'movie'} onClick={() => setActiveTab('movie')}>Movies <span>{watchlists.movie.length}</span></button>
         <button className={`watchlist-tab ${activeTab === 'tv' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'tv'} onClick={() => setActiveTab('tv')}>TV Shows <span>{watchlists.tv.length}</span></button>
       </div>
-      <WatchlistSection type={activeTab} items={watchlists[activeTab]} onRemove={handleRemove} />
+      <div className="watchlist-search">
+        <span aria-hidden="true">⌕</span>
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search your watchlist" aria-label="Search your watchlist" />
+        {query && <button type="button" onClick={() => setQuery('')} aria-label="Clear search">×</button>}
+      </div>
+      {shownItems.length === 0 && query.trim() ? (
+        <p className="watchlist-empty">No matching titles in your watchlist.</p>
+      ) : <WatchlistSection type={activeTab} items={shownItems} onRemove={handleRemove} />}
     </div>
   );
 };

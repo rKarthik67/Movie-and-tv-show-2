@@ -5,13 +5,21 @@ const sharedBaseUrl = (process.env.REACT_APP_SHARED_WATCHLIST_BASE_URL || 'http:
 
 const getStorageKey = (type) => WATCHLIST_KEYS[type];
 const itemKey = (item) => `${item.type}:${item.id}`;
+const addedAtValue = (item) => {
+  const timestamp = Date.parse(item.addedAt || '');
+  return Number.isFinite(timestamp) ? timestamp : 0;
+};
+const newestFirst = (items) => items
+  .map((item, index) => ({ item, index }))
+  .sort((a, b) => addedAtValue(b.item) - addedAtValue(a.item) || a.index - b.index)
+  .map(({ item }) => item);
 
 export const getWatchlist = (type) => {
   const key = getStorageKey(type);
   if (!key || typeof window === 'undefined') return [];
   try {
     const items = JSON.parse(window.localStorage.getItem(key) || '[]');
-    return Array.isArray(items) ? items : [];
+    return Array.isArray(items) ? newestFirst(items) : [];
   } catch (error) {
     console.error('Unable to read watchlist:', error);
     return [];
@@ -39,7 +47,7 @@ const saveSnapshot = (snapshot) => {
   const merged = new Map(localItems().map((item) => [itemKey(item), item]));
   deleted.forEach((key) => merged.delete(key));
   (snapshot.items || []).forEach((item) => merged.set(itemKey(item), item));
-  const items = [...merged.values()];
+  const items = newestFirst([...merged.values()]);
   saveWatchlist('movie', items.filter((item) => item.type === 'movie'), { notify: false });
   saveWatchlist('tv', items.filter((item) => item.type === 'tv'), { notify: false });
   window.dispatchEvent(new Event('ark-play-watchlist-updated'));
@@ -140,8 +148,9 @@ export const toggleWatchlistItem = (type, item) => {
     syncSharedWatchlist().catch(() => {});
     return false;
   }
-  saveWatchlist(type, [item, ...items]);
-  queueChange('add', { ...item, type });
+  const addedItem = { ...item, type, addedAt: new Date().toISOString() };
+  saveWatchlist(type, newestFirst([addedItem, ...items]));
+  queueChange('add', addedItem);
   syncSharedWatchlist().catch(() => {});
   return true;
 };
