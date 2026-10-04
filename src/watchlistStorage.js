@@ -63,26 +63,29 @@ const localItems = () => [
 
 const saveSnapshot = (snapshot) => {
   const deleted = new Set((snapshot.deleted || []).map(itemKey));
-  const local = localItems().map(normalizedItem);
-  const localByKey = new Map(local.map((item) => [itemKey(item), item]));
-  const received = (snapshot.items || []).map(normalizedItem);
-  const receivedKeys = new Set(received.map(itemKey));
+  let items = localItems().map(normalizedItem)
+    .filter((item) => !deleted.has(itemKey(item)));
+  const incomingKeys = new Set();
+  const additions = [];
+  let updatedExisting = false;
 
-  // The API is the common source of truth. Retain its sequence when dates
-  // tie (for example, when a whole local list was joined at once), which is
-  // the same ordering ARKTheater gets from its snapshot. Keep only genuinely
-  // local, not-yet-uploaded titles after the server's items.
-  const serverItems = received
-    .filter((item) => !deleted.has(itemKey(item)))
-    .map((incoming) => {
-      const existing = localByKey.get(itemKey(incoming));
-      return incoming?.addedAt || !existing?.addedAt
-        ? incoming
-        : { ...incoming, addedAt: existing.addedAt };
-    });
-  const pendingLocalItems = local.filter((item) =>
-    !deleted.has(itemKey(item)) && !receivedKeys.has(itemKey(item)));
-  const items = newestFirst([...serverItems, ...pendingLocalItems]);
+  // This mirrors ARKTheater's _mergeSnapshot exactly: existing entries keep
+  // their position, only brand-new server entries are prepended, and then the
+  // shared newest-first comparator runs with a stable original-index tie-break.
+  (snapshot.items || []).map(normalizedItem).forEach((incoming) => {
+    const key = itemKey(incoming);
+    const existingIndex = items.findIndex((item) => itemKey(item) === key);
+    if (existingIndex >= 0) {
+      if (!items[existingIndex].addedAt && incoming.addedAt) {
+        items[existingIndex] = { ...items[existingIndex], addedAt: incoming.addedAt };
+        updatedExisting = true;
+      }
+    } else if (!incomingKeys.has(key)) {
+      additions.push(incoming);
+      incomingKeys.add(key);
+    }
+  });
+  if (additions.length || updatedExisting) items = newestFirst([...additions, ...items]);
   saveWatchlist('movie', items.filter((item) => item.type === 'movie'), { notify: false });
   saveWatchlist('tv', items.filter((item) => item.type === 'tv'), { notify: false });
   window.dispatchEvent(new Event('ark-play-watchlist-updated'));
