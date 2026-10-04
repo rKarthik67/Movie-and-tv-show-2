@@ -1,7 +1,10 @@
 const WATCHLIST_KEYS = { movie: 'ark-play:movie-watchlist', tv: 'ark-play:tv-watchlist' };
 const SHARED_SECRET_KEY = 'ark-play:shared-watchlist-secret.v1';
 const PENDING_CHANGES_KEY = 'ark-play:shared-watchlist-pending-changes.v1';
-const sharedBaseUrl = (process.env.REACT_APP_SHARED_WATCHLIST_BASE_URL || 'http://129.154.245.13').replace(/\/+$/, '');
+// Keep this aligned with ARKTheater's sharedWatchlistBaseUrl. The raw Oracle
+// IP no longer serves the watchlist API; this HTTPS endpoint is where the
+// shared library assigns the authoritative addedAt timestamp.
+const sharedBaseUrl = (process.env.REACT_APP_SHARED_WATCHLIST_BASE_URL || 'https://arkscraper.duckdns.org').replace(/\/+$/, '');
 
 const getStorageKey = (type) => WATCHLIST_KEYS[type];
 const itemKey = (item) => `${item.type}:${item.id}`;
