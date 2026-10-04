@@ -5,8 +5,24 @@ const sharedBaseUrl = (process.env.REACT_APP_SHARED_WATCHLIST_BASE_URL || 'http:
 
 const getStorageKey = (type) => WATCHLIST_KEYS[type];
 const itemKey = (item) => `${item.type}:${item.id}`;
+const timestampKeys = ['addedAt', 'dateAdded', 'createdAt', 'added_at', 'created_at', 'timestamp', 'savedAt'];
+const timestampToIso = (value) => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    // Support both Unix seconds and JavaScript milliseconds.
+    const date = new Date(value < 100000000000 ? value * 1000 : value);
+    return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  }
+  if (typeof value !== 'string' || !value.trim()) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+};
+const normalizedItem = (item) => {
+  if (!item || typeof item !== 'object') return item;
+  const timestamp = timestampKeys.map((key) => timestampToIso(item[key])).find(Boolean);
+  return timestamp ? { ...item, addedAt: timestamp } : item;
+};
 const addedAtValue = (item) => {
-  const timestamp = Date.parse(item.addedAt || '');
+  const timestamp = Date.parse(normalizedItem(item)?.addedAt || '');
   return Number.isFinite(timestamp) ? timestamp : 0;
 };
 const newestFirst = (items) => items
@@ -19,7 +35,7 @@ export const getWatchlist = (type) => {
   if (!key || typeof window === 'undefined') return [];
   try {
     const items = JSON.parse(window.localStorage.getItem(key) || '[]');
-    return Array.isArray(items) ? newestFirst(items) : [];
+    return Array.isArray(items) ? newestFirst(items.map(normalizedItem)) : [];
   } catch (error) {
     console.error('Unable to read watchlist:', error);
     return [];
@@ -30,7 +46,7 @@ const saveWatchlist = (type, items, { notify = true } = {}) => {
   const key = getStorageKey(type);
   if (!key || typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(key, JSON.stringify(items));
+    window.localStorage.setItem(key, JSON.stringify(items.map(normalizedItem)));
     if (notify) window.dispatchEvent(new Event('ark-play-watchlist-updated'));
   } catch (error) {
     console.error('Unable to save watchlist:', error);
@@ -44,9 +60,17 @@ const localItems = () => [
 
 const saveSnapshot = (snapshot) => {
   const deleted = new Set((snapshot.deleted || []).map(itemKey));
-  const merged = new Map(localItems().map((item) => [itemKey(item), item]));
+  const merged = new Map(localItems().map((item) => [itemKey(item), normalizedItem(item)]));
   deleted.forEach((key) => merged.delete(key));
-  (snapshot.items || []).forEach((item) => merged.set(itemKey(item), item));
+  (snapshot.items || []).forEach((item) => {
+    const incoming = normalizedItem(item);
+    const existing = merged.get(itemKey(incoming));
+    // Some clients/API versions omit the timestamp in a returned snapshot.
+    // Keep the original add date so a sync never destroys the sort order.
+    merged.set(itemKey(incoming), incoming?.addedAt || !existing?.addedAt
+      ? incoming
+      : { ...incoming, addedAt: existing.addedAt });
+  });
   const items = newestFirst([...merged.values()]);
   saveWatchlist('movie', items.filter((item) => item.type === 'movie'), { notify: false });
   saveWatchlist('tv', items.filter((item) => item.type === 'tv'), { notify: false });
