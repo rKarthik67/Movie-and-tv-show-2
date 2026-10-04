@@ -8,6 +8,9 @@ const sharedBaseUrl = (process.env.REACT_APP_SHARED_WATCHLIST_BASE_URL || 'https
 
 const getStorageKey = (type) => WATCHLIST_KEYS[type];
 const itemKey = (item) => `${item.type}:${item.id}`;
+const compareStableItems = (first, second) =>
+  String(first.type || '').localeCompare(String(second.type || '')) ||
+  Number(first.id || 0) - Number(second.id || 0);
 const timestampKeys = ['addedAt', 'dateAdded', 'createdAt', 'added_at', 'created_at', 'timestamp', 'savedAt'];
 const timestampToIso = (value) => {
   if (typeof value === 'number' && Number.isFinite(value)) {
@@ -29,8 +32,8 @@ const addedAtValue = (item) => {
   return Number.isFinite(timestamp) ? timestamp : 0;
 };
 const newestFirst = (items) => items
-  .map((item, index) => ({ item, index }))
-  .sort((a, b) => addedAtValue(b.item) - addedAtValue(a.item) || a.index - b.index)
+  .map((item) => ({ item }))
+  .sort((a, b) => addedAtValue(b.item) - addedAtValue(a.item) || compareStableItems(a.item, b.item))
   .map(({ item }) => item);
 
 export const getWatchlist = (type) => {

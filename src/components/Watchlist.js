@@ -16,13 +16,18 @@ const addedAt = (item) => {
   const value = Date.parse(item.addedAt || '');
   return Number.isFinite(value) ? value : 0;
 };
+const compareStableItems = (first, second) =>
+  String(first.type || '').localeCompare(String(second.type || '')) ||
+  Number(first.id || 0) - Number(second.id || 0);
 const sortItems = (items, sort) => items
-  .map((item, index) => ({ item, index }))
+  .map((item) => ({ item }))
   .sort((a, b) => {
-    if (sort === 'added-asc') return addedAt(a.item) - addedAt(b.item) || a.index - b.index;
-    if (sort === 'title-asc') return (a.item.title || '').localeCompare(b.item.title || '') || a.index - b.index;
-    if (sort === 'rating-desc') return Number(b.item.voteAverage || 0) - Number(a.item.voteAverage || 0) || a.index - b.index;
-    return addedAt(b.item) - addedAt(a.item) || a.index - b.index;
+    let comparison;
+    if (sort === 'added-asc') comparison = addedAt(a.item) - addedAt(b.item);
+    else if (sort === 'title-asc') comparison = (a.item.title || '').localeCompare(b.item.title || '');
+    else if (sort === 'rating-desc') comparison = Number(b.item.voteAverage || 0) - Number(a.item.voteAverage || 0);
+    else comparison = addedAt(b.item) - addedAt(a.item);
+    return comparison || compareStableItems(a.item, b.item);
   })
   .map(({ item }) => item);
 
