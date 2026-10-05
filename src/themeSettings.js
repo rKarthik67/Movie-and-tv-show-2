@@ -66,6 +66,9 @@ export function ThemeSettingsProvider({ children }) {
     root.style.setProperty('--border', `color-mix(in srgb, ${settings.accent} 35%, #292c34)`);
     root.style.setProperty('--glass-alpha', String(Math.min(.92, .08 + (settings.glassOpacity * .13))));
     root.style.setProperty('--glass', `color-mix(in srgb, var(--surface) ${Math.round(Math.min(.92, .08 + (settings.glassOpacity * .13)) * 100)}%, transparent)`);
+    // The glass remains transparent at every level. This setting controls
+    // only refraction/frosting: 0 = optically clear, 4 = 20px blur.
+    root.style.setProperty('--liquid-glass-blur', `${Math.max(0, settings.glassOpacity * 5)}px`);
     root.style.setProperty('--text-scale', String(settings.textScale));
     root.style.setProperty('--animation-color', settings.animationColor);
     Object.entries(settings.categoryFonts).forEach(([category, font]) => root.style.setProperty(`--font-${category}`, `'${font}', sans-serif`));

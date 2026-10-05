@@ -124,7 +124,7 @@ const Settings = () => {
       </SettingsGroup>
       <SettingsGroup title="Appearance">
         <div className="appearance-grid">
-          <RangeCard label="Liquid glass transparency" value={settings.glassOpacity} min="0" max="4" step=".1" text={settings.glassOpacity.toFixed(1)} onChange={(glassOpacity) => update({ glassOpacity: Number(glassOpacity) })} />
+          <RangeCard label="Liquid glass blur" value={settings.glassOpacity} min="0" max="4" step=".1" text={settings.glassOpacity.toFixed(1)} onChange={(glassOpacity) => update({ glassOpacity: Number(glassOpacity) })} />
           <RangeCard label="Text size" value={settings.textScale} min=".85" max="1.4" step=".05" text={`${Math.round(settings.textScale * 100)}%`} onChange={(textScale) => update({ textScale: Number(textScale) })} />
           <ChoiceCard label="Body & UI font" value={settings.bodyFont} onChange={(bodyFont) => update({ bodyFont })} help="Navigation, metadata, buttons, and general copy." />
           <ChoiceCard label="Display font" value={settings.displayFont} onChange={(displayFont) => update({ displayFont })} help="Hero titles and section headings." />

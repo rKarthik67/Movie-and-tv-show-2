@@ -1,9 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Josefin+Sans:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&family=Roboto:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
 
- :root { --accent: #e0a83a; --background: color-mix(in srgb, var(--accent) 9%, #08090d); --surface: color-mix(in srgb, var(--accent) 13%, #101116); --surface-variant: color-mix(in srgb, var(--accent) 19%, #12141a); --border: color-mix(in srgb, var(--accent) 35%, #292c34); --text-primary: #f5f5f7; --text-secondary: #a8a5a0; --glass-alpha: .55; --glass: color-mix(in srgb, var(--surface) 55%, transparent); --font-ui: 'Space Grotesk', sans-serif; --font-display: 'Instrument Serif', serif; --text-scale: 1; --font-header: 'Instrument Serif', serif; --font-card: 'Space Grotesk', sans-serif; --font-body: 'Space Grotesk', sans-serif; --font-info: 'Space Grotesk', sans-serif; --font-cast: 'Space Grotesk', sans-serif; --font-button: 'Space Grotesk', sans-serif; --font-navigation: 'Space Grotesk', sans-serif; }
-* { box-sizing: border-box; } html { min-height: 100%; background: var(--background); font-size: calc(16px * var(--text-scale)); } body { margin: 0; min-width: 320px; color: var(--color-body, var(--text-primary)); background: radial-gradient(900px circle at 50% -240px, color-mix(in srgb, var(--accent) 16%, transparent), transparent 58%), var(--background); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+ :root { --accent: #e0a83a; --background: color-mix(in srgb, var(--accent) 9%, #08090d); --surface: color-mix(in srgb, var(--accent) 13%, #101116); --surface-variant: color-mix(in srgb, var(--accent) 19%, #12141a); --border: color-mix(in srgb, var(--accent) 35%, #292c34); --text-primary: #f5f5f7; --text-secondary: #a8a5a0; --glass-alpha: .55; --glass: color-mix(in srgb, var(--surface) 55%, transparent); --liquid-glass-blur: 0px; --liquid-glass-fill: color-mix(in srgb, var(--surface) 55%, transparent); --liquid-glass-edge: rgba(255, 255, 255, .17); --liquid-glass-highlight: rgba(255, 255, 255, .42); --liquid-glass-shadow: rgba(0, 0, 0, .28); --font-ui: 'Space Grotesk', sans-serif; --font-display: 'Instrument Serif', serif; --text-scale: 1; --font-header: 'Instrument Serif', serif; --font-card: 'Space Grotesk', sans-serif; --font-body: 'Space Grotesk', sans-serif; --font-info: 'Space Grotesk', sans-serif; --font-cast: 'Space Grotesk', sans-serif; --font-button: 'Space Grotesk', sans-serif; --font-navigation: 'Space Grotesk', sans-serif; }
+* { box-sizing: border-box; } html { min-height: 100%; background: var(--background); font-size: calc(16px * var(--text-scale)); } body { margin: 0; min-width: 320px; color: var(--color-body, var(--text-primary)); background: radial-gradient(64rem circle at 4% -12%, color-mix(in srgb, var(--accent) 27%, transparent), transparent 42%), radial-gradient(46rem circle at 106% 18%, rgba(92, 116, 255, .2), transparent 43%), radial-gradient(50rem circle at 50% 112%, rgba(152, 76, 196, .15), transparent 44%), var(--background); background-attachment: fixed; font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 button, input, select, textarea { font: inherit; } button { background: var(--accent); color: #221703; border-radius: 999px; font-family: var(--font-button); transition: transform .18s ease, filter .18s ease; } button:hover { background: var(--accent); filter: brightness(1.08); transform: translateY(-1px); } h1, h2, h3, h4, .movieTitle, .type-section h2, .section-title { color: var(--color-header, var(--text-primary)); font-family: var(--font-header); }.nav-link { font-family: var(--font-navigation) !important; }.swiper-slide h3, .media-grid-card h3, .watchlist-card h3 { color: var(--color-card, var(--text-primary)); font-family: var(--font-card); }.overview, .genres, .movie-info, .series-info { font-family: var(--font-body); }.cast-member { font-family: var(--font-cast); }.genres__item, .watchlist-empty, small { color: var(--color-info, var(--text-secondary)); font-family: var(--font-info); }
-#root, .App { min-height: 100vh; } main { min-height: 100vh; }
+#root, .App { min-height: 100vh; background: transparent; } main { min-height: 100vh; }
+
+/* Liquid-glass surfaces: layered reflection, a fine edge, and a blurred
+   version of the content behind the surface. The opaque fill is a fallback
+   for browsers that do not support backdrop-filter. */
+body .header,
+body .appearance-card,
+body .watchlist-search,
+body .watchlist-sort select,
+body .movies-page .search-bar,
+body .tvshows-page .search-bar {
+  background: rgba(15, 17, 22, .42);
+  border-color: transparent;
+  box-shadow: 0 12px 36px var(--liquid-glass-shadow);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  body .header,
+  body .appearance-card,
+  body .watchlist-search,
+  body .watchlist-sort select,
+  body .movies-page .search-bar,
+  body .tvshows-page .search-bar {
+    /* Deliberately no surface tint: the background must remain visible,
+       like a clear liquid layer rather than an opaque frosted panel. */
+    background: rgba(255, 255, 255, 0);
+    -webkit-backdrop-filter: blur(var(--liquid-glass-blur)) saturate(1.12) brightness(1.02);
+    backdrop-filter: blur(var(--liquid-glass-blur)) saturate(1.12) brightness(1.02);
+  }
+}
 .motion-enter, .section-div, .movies-page .content-container, .tvshows-page .content-container, .platforms-content, .watchlist-page, .backdrop-image { animation: ark-enter .58s both cubic-bezier(.2,.8,.2,1); }
 .platform-card, .cast-member { animation: ark-enter .52s both cubic-bezier(.2,.8,.2,1); transition: transform .2s ease, box-shadow .2s ease; }.platform-card:hover { transform: translateY(-6px) scale(1.015); box-shadow: 0 16px 34px rgba(0,0,0,.32); }
 html[data-motion='fade'] .motion-enter, html[data-motion='fade'] .section-div, html[data-motion='fade'] .movies-page .content-container, html[data-motion='fade'] .tvshows-page .content-container, html[data-motion='fade'] .platforms-content, html[data-motion='fade'] .watchlist-page, html[data-motion='fade'] .backdrop-image, html[data-motion='fade'] .platform-card, html[data-motion='fade'] .cast-member { animation-name: ark-fade; }
