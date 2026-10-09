@@ -5,6 +5,7 @@ import { API_KEY } from '../api';
 import bg from '../assets/footer-bg.jpg';
 import { OTT_PLATFORMS, PRODUCTION_HOUSES } from '../platformFilters';
 import { useThemeSettings } from '../themeSettings';
+import LiveTv from './LiveTv';
 import './Platforms.css';
 
 const FilterGrid = ({ title, filters, filterType, region, logos }) => (
@@ -68,8 +69,9 @@ const Platforms = () => {
         <div className="platform-category-tabs" role="tablist" aria-label="Platform category">
           <button className={`platform-category-tab ${activeTab === 'provider' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'provider'} onClick={() => setActiveTab('provider')}>OTT Platforms <span>{OTT_PLATFORMS.length}</span></button>
           <button className={`platform-category-tab ${activeTab === 'company' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'company'} onClick={() => setActiveTab('company')}>Production Houses <span>{PRODUCTION_HOUSES.length}</span></button>
+          <button className={`platform-category-tab ${activeTab === 'live-tv' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'live-tv'} onClick={() => setActiveTab('live-tv')}>Live TV</button>
         </div>
-        {activeTab === 'provider' ? (
+        {activeTab === 'live-tv' ? <LiveTv /> : activeTab === 'provider' ? (
           <FilterGrid title="OTT Platforms" filters={OTT_PLATFORMS} filterType="provider" region={region} logos={providerLogos} />
         ) : (
           <FilterGrid title="Production Houses" filters={PRODUCTION_HOUSES} filterType="company" region={region} logos={companyLogos} />
