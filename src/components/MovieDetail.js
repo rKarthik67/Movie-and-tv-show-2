@@ -193,6 +193,7 @@ const MovieDetail = () => {
                             </Button>
                             <Button onClick={() => handleServerChange(`https://vidcore.org/embed/movie/${id}`)}>VidCore</Button>
                             <Button onClick={() => handleServerChange(`https://vidlink.pro/movie/${id}`)}>VidLink</Button>
+                            <Button onClick={() => handleServerChange(`https://embed.vidrift.net/embed/movie/${id}`)}>VidRift</Button>
                             <Button onClick={() => handleServerChange(`https://player.smashy.stream/movie/${id}`)}>Server 5</Button>
                             <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/movie/${id}`)}>Server 6</Button>
                             <Button onClick={() => handleServerChange(`https://player.videasy.net/movie/${id}`)}>Server 7</Button>

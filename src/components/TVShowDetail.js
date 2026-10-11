@@ -248,6 +248,7 @@ const TVShowDetail = () => {
               </Button>
               <Button onClick={() => handleServerChange(`https://vidcore.org/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidCore</Button>
               <Button onClick={() => handleServerChange(`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidLink</Button>
+              <Button onClick={() => handleServerChange(`https://embed.vidrift.net/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidRift</Button>
               <Button onClick={() => handleServerChange(`https://player.smashy.stream/tv/${id}?s=${selectedSeason}&e=${selectedEpisode}`)}>Server 5</Button>
               <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 6</Button>
               <Button onClick={() => handleServerChange(`https://player.videasy.net/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 7</Button>
