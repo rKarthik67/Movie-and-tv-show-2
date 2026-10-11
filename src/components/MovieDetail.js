@@ -14,6 +14,7 @@ const MovieDetail = () => {
     const { id } = useParams();
     const [movie, setMovie] = useState({});
     const [cast, setCast] = useState([]);
+    const [collection, setCollection] = useState({ name: '', parts: [] });
     const [relatedVideos, setRelatedVideos] = useState([]);
     const [similarMovies, setSimilarMovies] = useState([]);
     const [currentServer, setCurrentServer] = useState(`https://vidsync.pro/embed/movie/${id}`);
@@ -28,6 +29,26 @@ const MovieDetail = () => {
         try {
             const movieRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
             setMovie(movieRes.data);
+
+            const collectionInfo = movieRes.data.belongs_to_collection;
+            if (collectionInfo?.id) {
+                try {
+                    const collectionRes = await axios.get(
+                        `https://api.themoviedb.org/3/collection/${collectionInfo.id}?api_key=${API_KEY}`
+                    );
+                    setCollection({
+                        name: collectionRes.data.name || collectionInfo.name || 'Collection',
+                        parts: (collectionRes.data.parts || [])
+                            .filter((part) => String(part.id) !== String(id))
+                            .sort((first, second) => (first.release_date || '').localeCompare(second.release_date || '')),
+                    });
+                } catch (collectionError) {
+                    console.warn('Unable to load movie collection:', collectionError);
+                    setCollection({ name: '', parts: [] });
+                }
+            } else {
+                setCollection({ name: '', parts: [] });
+            }
 
             const castRes = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`);
             setCast(castRes.data.cast.slice(0, 10));
@@ -114,6 +135,16 @@ const MovieDetail = () => {
                     </div>
                 </div>
             </section>
+
+            {collection.parts.length > 0 ? (
+                <section className='collection-section'>
+                    <div className='collection-slider'>
+                        <h2>{collection.name}</h2>
+                        <p className='collection-description'>Connected movies in this official collection</p>
+                        <Slider items={collection.parts} onItemClick={handleItemClick} itemType="movie" />
+                    </div>
+                </section>
+            ) : null}
 
             <section className='cast-section'>
                 <div className='cast-slider'>

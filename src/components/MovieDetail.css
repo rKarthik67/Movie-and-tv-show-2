@@ -98,6 +98,21 @@
     text-align: center;
 }
 
+.collection-section .collection-slider {
+    padding: 20px 30px 10px;
+}
+
+.collection-section .collection-slider h2 {
+    color: white;
+    margin: 0;
+}
+
+.collection-description {
+    color: rgba(255, 255, 255, 0.62);
+    margin: 6px 0 16px;
+    font-size: 14px;
+}
+
 .similar-section .similar-movies {
     padding: 30px;
 }
