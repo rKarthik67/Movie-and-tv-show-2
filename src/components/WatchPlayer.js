@@ -122,6 +122,9 @@ const WatchPlayer = () => {
   const introVisible = canSkipIntro && videoRef.current && videoRef.current.currentTime >= introStart && videoRef.current.currentTime < introEnd;
   const title = details?.title || details?.name || 'Loading…';
   const availableSeasons = (details?.seasons || []).filter((item) => item.season_number >= 0 && item.episode_count > 0);
+  const returnToDetail = () => {
+    navigate(type === 'tv' ? `/tvshows/${id}` : `/movies/${id}`);
+  };
 
   const changeSeason = (nextSeason) => {
     navigate(`/watch/tv/${id}?${new URLSearchParams({ source, season: String(nextSeason), episode: '1' }).toString()}`);
@@ -130,7 +133,7 @@ const WatchPlayer = () => {
   return (
     <div className="watch-page">
       <header className="watch-header">
-        <button type="button" className="watch-back" onClick={() => navigate(-1)} aria-label="Back">←</button>
+        <button type="button" className="watch-back" onClick={returnToDetail} aria-label="Back to details">←</button>
         <div>
           <Link to={type === 'tv' ? `/tvshows/${id}` : `/movies/${id}`}>{title}{type === 'trailer' ? ' — Trailer' : ''}</Link>
           {type === 'tv' ? <span className="watch-episode-label">Season {season}, Episode {episode}</span> : null}
