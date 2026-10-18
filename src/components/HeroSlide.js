@@ -3,31 +3,23 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import TrailerModal from './TrailerModal';
 import { API_KEY } from '../api';
 import Button, { OutlineButton } from './Button';
 import './HeroSlide.css';
 
 const HeroSlide = ({ movies }) => {
-  const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [trailerUrl, setTrailerUrl] = React.useState('');
   const [activeSlideIndex, setActiveSlideIndex] = React.useState(0);
   const navigate = useNavigate();
 
-  const openModal = (movieId) => {
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`)
-      .then((res) => {
-        const trailer = res.data.results.find((video) => video.type === 'Trailer');
-        setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}`);
-        setModalIsOpen(true);
-      });
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setTrailerUrl('');
+  const openTrailer = (movieId) => {
+    // Fetch only the public TMDB trailer identifier, then use the dedicated player route.
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const trailer = (data.results || []).find((video) => video.type === 'Trailer' && video.site === 'YouTube');
+        if (trailer?.key) navigate(`/watch/trailer/${movieId}?youtube=${encodeURIComponent(trailer.key)}`);
+      })
+      .catch(() => {});
   };
 
   const handleWatchNow = (movieId) => {
@@ -65,7 +57,7 @@ const HeroSlide = ({ movies }) => {
                       <Button onClick={() => handleWatchNow(movie.id)} className="btn-watchnow">
                         Watch Now
                       </Button>
-                      <OutlineButton onClick={() => openModal(movie.id)} className="btn-watchtrailer">
+                      <OutlineButton onClick={() => openTrailer(movie.id)} className="btn-watchtrailer">
                         Watch Trailer
                       </OutlineButton>
                     </div>
@@ -84,7 +76,6 @@ const HeroSlide = ({ movies }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <TrailerModal isOpen={modalIsOpen} onRequestClose={closeModal} trailerUrl={trailerUrl} />
     </>
   );
 };

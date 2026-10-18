@@ -1,0 +1,36 @@
+.watch-page { min-height: 100vh; background: var(--background, #08090d); color: var(--text-primary, #f7f5f2); }
+.watch-header { min-height: 62px; display: flex; align-items: center; gap: 14px; padding: 0 24px; background: rgba(16,17,22,.92); border-bottom: 1px solid var(--border, #292c34); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(18px); }
+.watch-header a { color: inherit; font-weight: 700; text-decoration: none; }
+.watch-episode-label { display: block; color: var(--text-secondary, #a8a5a0); font-size: .85rem; margin-top: 2px; }
+.watch-back, .watch-controls button, .resume-card button, .up-next button, .skip-intro { border: 0; border-radius: 999px; cursor: pointer; padding: 9px 14px; background: var(--surface-variant, #1a1c23); color: inherit; }
+.watch-back { font-size: 1.45rem; line-height: 1; padding: 6px 12px 9px; }
+.watch-main { width: min(1400px, 100%); margin: 0 auto; }
+.watch-main-tv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 330px); align-items: stretch; }
+.watch-stage { position: relative; width: 100%; background: #000; aspect-ratio: 16 / 9; max-height: calc(100vh - 62px); }
+.watch-video, .watch-embed { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+.resume-card, .up-next { position: absolute; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 10px; padding: 13px; border-radius: 14px; background: rgba(10,10,12,.9); box-shadow: 0 8px 30px rgba(0,0,0,.45); }
+.up-next { left: 22px; right: auto; }
+.resume-card button, .up-next button, .skip-intro { background: var(--accent, #e0a83a); color: #15120b; font-weight: 700; }
+.skip-intro { position: absolute; right: 22px; bottom: 22px; }
+.watch-controls { padding: 22px 24px 48px; }
+.watch-main-tv .watch-controls { grid-column: 1 / -1; }
+.watch-controls h1 { margin: 0 0 6px; }
+.watch-controls p { color: var(--text-secondary, #a8a5a0); }
+.watch-note { max-width: 850px; font-size: .92rem; }
+.watch-source-list { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+.watch-source-list button.active { background: var(--accent, #e0a83a); color: #15120b; font-weight: 700; }
+.episode-rail { min-height: 0; max-height: calc(100vh - 62px); background: var(--surface, #101116); border-left: 1px solid var(--border, #292c34); display: flex; flex-direction: column; }
+.episode-rail-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 15px 14px; border-bottom: 1px solid var(--border, #292c34); }
+.episode-rail select { max-width: 175px; border: 1px solid var(--border, #292c34); background: var(--surface-variant, #1a1c23); color: inherit; border-radius: 8px; padding: 7px 9px; }
+.episode-rail-list { overflow-y: auto; padding: 8px; }
+.episode-rail-item { width: 100%; display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; padding: 8px; border: 0; border-radius: 10px; text-align: left; color: inherit; background: transparent; cursor: pointer; }
+.episode-rail-item:hover, .episode-rail-item.active { background: var(--surface-variant, #1a1c23); }
+.episode-rail-item.active { box-shadow: inset 3px 0 var(--accent, #e0a83a); }
+.episode-rail-item img, .episode-image-placeholder { width: 112px; height: 63px; border-radius: 6px; object-fit: cover; background: #090a0d; }
+.episode-image-placeholder { display: flex; align-items: center; justify-content: center; color: var(--text-secondary, #a8a5a0); font-size: .75rem; }
+.episode-rail-copy { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; }
+.episode-rail-copy b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .87rem; }
+.episode-rail-copy small { color: var(--text-secondary, #a8a5a0); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 900px) { .watch-main-tv { display: block; } .episode-rail { max-height: 420px; border-left: 0; border-top: 1px solid var(--border, #292c34); } }
+@media (max-width: 640px) { .watch-header { padding: 0 14px; } .watch-controls { padding: 17px 14px 35px; } .watch-stage { aspect-ratio: auto; height: 62vw; min-height: 230px; } .resume-card, .up-next { left: 12px; right: 12px; bottom: 12px; flex-wrap: wrap; } .skip-intro { right: 12px; bottom: 12px; } }

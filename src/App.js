@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -21,9 +21,46 @@ import LanguageMovies from './components/LanguageMovies';
 import PersonDetail from './components/PersonDetail';
 import Credits from './components/Credits';
 import Settings from './components/Settings';
+import WatchPlayer from './components/WatchPlayer';
 import { ThemeSettingsProvider } from './themeSettings';
 import { startSharedWatchlistPolling } from './watchlistStorage';
 
+
+function AppShell() {
+  const isWatchRoute = useLocation().pathname.startsWith('/watch/');
+
+  return (
+    <div className="App">
+      {!isWatchRoute ? <Header /> : null}
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/tvshows" element={<TVShows />} />
+          <Route path="/platforms" element={<Platforms />} />
+          <Route path="/platforms/:filterType/:filterId" element={<PlatformResults />} />
+          <Route path="/credits" element={<Credits />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/top-rated-movies" element={<TopRatedMovies />} />
+          <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />
+          <Route path="/movies/:id" element={<MovieDetail />} />
+          <Route path="/tvshows/:id" element={<TVShowDetail />} />
+          <Route path="/watch/:type/:id" element={<WatchPlayer />} />
+          <Route path="/people/:id" element={<PersonDetail />} />
+          <Route path="/tamil-movies" element={<TamilMovies />} />
+          <Route path="/malayalam-movies" element={<MalayalamMovies />} />
+          <Route path="/telugu-movies" element={<TeluguMovies />} />
+          <Route path="/kannada-movies" element={<KannadaMovies />} />
+          <Route path="/hindi-movies" element={<HindiMovies />} />
+          <Route path="/korean-movies" element={<LanguageMovies languageCode="ko" title="Korean Movies" />} />
+          <Route path="/japanese-movies" element={<LanguageMovies languageCode="ja" title="Japanese Movies" />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </main>
+      {!isWatchRoute ? <Footer /> : null}
+    </div>
+  );
+}
 
 function App() {
   useEffect(() => startSharedWatchlistPolling(), []);
@@ -31,34 +68,7 @@ function App() {
   return (
     <ThemeSettingsProvider>
       <Router>
-        <div className="App">
-          <Header />
-          <main>
-            <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/tvshows" element={<TVShows />} />
-            <Route path="/platforms" element={<Platforms />} />
-            <Route path="/platforms/:filterType/:filterId" element={<PlatformResults />} />
-            <Route path="/credits" element={<Credits />} />
-            <Route path="/watchlist" element={<Watchlist />} />
-            <Route path="/top-rated-movies" element={<TopRatedMovies />} />
-            <Route path="/top-rated-tvshow" element={<TopRatedTvShows />} />
-            <Route path="/movies/:id" element={<MovieDetail />} />
-            <Route path="/tvshows/:id" element={<TVShowDetail />} />
-            <Route path="/people/:id" element={<PersonDetail />} />
-            <Route path="/tamil-movies" element={<TamilMovies />} />
-            <Route path="/malayalam-movies" element={<MalayalamMovies />} />
-            <Route path="/telugu-movies" element={<TeluguMovies />} />
-            <Route path="/kannada-movies" element={<KannadaMovies />} />
-            <Route path="/hindi-movies" element={<HindiMovies />} />
-            <Route path="/korean-movies" element={<LanguageMovies languageCode="ko" title="Korean Movies" />} />
-            <Route path="/japanese-movies" element={<LanguageMovies languageCode="ja" title="Japanese Movies" />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <AppShell />
       </Router>
     </ThemeSettingsProvider>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,13 +17,8 @@ const MovieDetail = () => {
     const [collection, setCollection] = useState({ name: '', parts: [] });
     const [relatedVideos, setRelatedVideos] = useState([]);
     const [similarMovies, setSimilarMovies] = useState([]);
-    const [currentServer, setCurrentServer] = useState(`https://vidsync.pro/embed/movie/${id}`);
     const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('movie', id));
-    const videoSectionRef = useRef(null);
-    const serverTwoClickTimer = useRef(null);
     const navigate = useNavigate();
-
-    useEffect(() => () => window.clearTimeout(serverTwoClickTimer.current), []);
 
     const fetchMovieDetails = useCallback(async () => {
         try {
@@ -65,28 +60,12 @@ const MovieDetail = () => {
 
     useEffect(() => {
         fetchMovieDetails();
-        setCurrentServer(`https://vidsync.pro/embed/movie/${id}`);
         setIsWatchlisted(isInWatchlist('movie', id));
         window.scrollTo(0, 0);
     }, [fetchMovieDetails, id]);
 
-    const handleServerChange = (serverUrl) => {
-        setCurrentServer(serverUrl);
-        videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    };
-
     const handlePlayNowClick = () => {
-        videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const handleServerTwoClick = (serverUrl) => {
-        window.clearTimeout(serverTwoClickTimer.current);
-        serverTwoClickTimer.current = window.setTimeout(() => window.location.assign(serverUrl), 250);
-    };
-
-    const handleServerTwoDoubleClick = (serverUrl) => {
-        window.clearTimeout(serverTwoClickTimer.current);
-        window.open(serverUrl, '_blank', 'noopener,noreferrer');
+        navigate(`/watch/movie/${id}?source=vidsync`);
     };
 
     const handleWatchlistToggle = () => {
@@ -172,32 +151,8 @@ const MovieDetail = () => {
 
             <section className='server-section'>
                 <div className='server-player'>
-                    <div ref={videoSectionRef} className="video-player">
-                        <iframe className='iframe-movie'
-                            src={currentServer}
-                            width="100%"
-                            height="500px"
-                            frameBorder="0"
-                            allowFullScreen
-                            title="Movie Player"
-                        ></iframe>
-                        <div className="server-buttons">
-                            <Button onClick={() => handleServerChange(`https://vidsync.pro/embed/movie/${id}`)}>VidSync</Button>
-                            <Button onClick={() => handleServerChange(`https://www.moviesnexus.fun/movie/${id}?sv=multiaudio2`)}>MoviesNexus</Button>
-                            <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/movie/${id}`)}>Server 1</Button>
-                            <Button
-                                onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/movie/${id}`)}
-                                onDoubleClick={() => handleServerTwoDoubleClick(`https://pro.vidsrc.sbs/embed/movie/${id}`)}
-                            >
-                                Server 2
-                            </Button>
-                            <Button onClick={() => handleServerChange(`https://vidcore.org/embed/movie/${id}`)}>VidCore</Button>
-                            <Button onClick={() => handleServerChange(`https://vidlink.pro/movie/${id}`)}>VidLink</Button>
-                            <Button onClick={() => handleServerChange(`https://embed.vidrift.net/embed/movie/${id}`)}>VidRift</Button>
-                            <Button onClick={() => handleServerChange(`https://player.smashy.stream/movie/${id}`)}>Server 5</Button>
-                            <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/movie/${id}`)}>Server 6</Button>
-                            <Button onClick={() => handleServerChange(`https://player.videasy.net/movie/${id}`)}>Server 7</Button>
-                        </div>
+                    <div className="video-player">
+                        <p>Open the dedicated player and choose a stream source there.</p>
                     </div>
                 </div>
             </section>

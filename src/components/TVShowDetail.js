@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from './Slider';
@@ -19,15 +19,9 @@ const TVShowDetail = () => {
   const [seasons, setSeasons] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [episodes, setEpisodes] = useState([]);
-  const [currentServer, setCurrentServer] = useState('');
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const [isWatchlisted, setIsWatchlisted] = useState(() => isInWatchlist('tv', id));
   const navigate = useNavigate();
-  const videoSectionRef = useRef(null);
-  const serverSectionRef = useRef(null);
-  const serverTwoClickTimer = useRef(null);
-
-  useEffect(() => () => window.clearTimeout(serverTwoClickTimer.current), []);
 
   const fetchShowDetails = useCallback(async () => {
     const showRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}`);
@@ -53,7 +47,6 @@ const TVShowDetail = () => {
     const fetchData = async () => {
       await fetchShowDetails();
       await fetchEpisodes(1); // Default to the first season
-      setCurrentServer(`https://vidsync.pro/embed/tv/${id}/1/1`);
       setIsWatchlisted(isInWatchlist('tv', id));
     };
 
@@ -65,35 +58,19 @@ const TVShowDetail = () => {
     setSelectedSeason(seasonNumber);
     await fetchEpisodes(seasonNumber);
     setSelectedEpisode(1);
-    setCurrentServer(`https://vidsync.pro/embed/tv/${id}/${seasonNumber}/1`);
   };
 
   const handleEpisodeSelect = (episodeNumber) => {
     setSelectedEpisode(episodeNumber);
-    setCurrentServer(`https://vidsync.pro/embed/tv/${id}/${selectedSeason}/${episodeNumber}`);
-  };
-
-  const handleServerChange = (serverUrl) => {
-    setCurrentServer(serverUrl);
-    videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    navigate(`/watch/tv/${id}?source=vidsync&season=${selectedSeason}&episode=${episodeNumber}`);
   };
 
   const handleItemClick = (id, type) => {
     navigate(`/tvshows/${id}`);
   };
 
-  const scrollToServerSection = () => {
-    serverSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleServerTwoClick = (serverUrl) => {
-    window.clearTimeout(serverTwoClickTimer.current);
-    serverTwoClickTimer.current = window.setTimeout(() => window.location.assign(serverUrl), 250);
-  };
-
-  const handleServerTwoDoubleClick = (serverUrl) => {
-    window.clearTimeout(serverTwoClickTimer.current);
-    window.open(serverUrl, '_blank', 'noopener,noreferrer');
+  const openPlayer = () => {
+    navigate(`/watch/tv/${id}?source=vidsync&season=${selectedSeason}&episode=${selectedEpisode}`);
   };
 
   const handleWatchlistToggle = () => {
@@ -128,7 +105,7 @@ const TVShowDetail = () => {
               ))}
             </div>
             <p>{show.overview}</p>
-            <Button className='btn-playnow' style={{ margin: '10px 0' }} onClick={scrollToServerSection}>Play Now</Button>
+            <Button className='btn-playnow' style={{ margin: '10px 0' }} onClick={openPlayer}>Play Now</Button>
             <BookmarkButton
               isBookmarked={isWatchlisted}
               onClick={handleWatchlistToggle}
@@ -225,34 +202,10 @@ const TVShowDetail = () => {
         </div>
       </section>
 
-      <section className='server-section' ref={serverSectionRef}>
+      <section className='server-section'>
         <div className='server-player'>
-          <div ref={videoSectionRef} className="video-player">
-            <iframe className='iframe-episode'
-              src={currentServer}
-              width="100%"
-              height="500px"
-              frameBorder="0"
-              allowFullScreen
-              title="Episode Player"
-            ></iframe>
-            <div className='server-buttons'>
-              <Button onClick={() => handleServerChange(`https://vidsync.pro/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidSync</Button>
-              <Button onClick={() => handleServerChange(`https://www.moviesnexus.fun/tv/${id}/${selectedSeason}/${selectedEpisode}?sv=multiaudio2`)}>MoviesNexus</Button>
-              <Button onClick={() => handleServerChange(`https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${selectedSeason}&episode=${selectedEpisode}`)}>Server 1</Button>
-              <Button
-                onClick={() => handleServerTwoClick(`https://pro.vidsrc.sbs/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}
-                onDoubleClick={() => handleServerTwoDoubleClick(`https://pro.vidsrc.sbs/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}
-              >
-                Server 2
-              </Button>
-              <Button onClick={() => handleServerChange(`https://vidcore.org/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidCore</Button>
-              <Button onClick={() => handleServerChange(`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidLink</Button>
-              <Button onClick={() => handleServerChange(`https://embed.vidrift.net/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>VidRift</Button>
-              <Button onClick={() => handleServerChange(`https://player.smashy.stream/tv/${id}?s=${selectedSeason}&e=${selectedEpisode}`)}>Server 5</Button>
-              <Button onClick={() => handleServerChange(`https://iembed.codeera.dev/embed/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 6</Button>
-              <Button onClick={() => handleServerChange(`https://player.videasy.net/tv/${id}/${selectedSeason}/${selectedEpisode}`)}>Server 7</Button>
-            </div>
+          <div className="video-player">
+            <p>Episodes open in the dedicated player, where sources can be changed without leaving the page.</p>
           </div>
         </div>
       </section>
