@@ -6,6 +6,7 @@ import './Watchlist.css';
 
 const WATCHLIST_SORT_KEY = 'ark-play:watchlist-sort';
 const sortChoices = [
+  ['watched-desc', 'Recently watched — newest first'],
   ['added-desc', 'Date added — newest first'],
   ['added-asc', 'Date added — oldest first'],
   ['title-asc', 'Title — A to Z'],
@@ -16,6 +17,10 @@ const addedAt = (item) => {
   const value = Date.parse(item.addedAt || '');
   return Number.isFinite(value) ? value : 0;
 };
+const watchedAt = (item) => {
+  const value = Date.parse(item.lastWatchedAt || '');
+  return Number.isFinite(value) ? value : 0;
+};
 const compareStableItems = (first, second) =>
   String(first.type || '').localeCompare(String(second.type || '')) ||
   Number(first.id || 0) - Number(second.id || 0);
@@ -23,7 +28,8 @@ const sortItems = (items, sort) => items
   .map((item) => ({ item }))
   .sort((a, b) => {
     let comparison;
-    if (sort === 'added-asc') comparison = addedAt(a.item) - addedAt(b.item);
+    if (sort === 'watched-desc') comparison = watchedAt(b.item) - watchedAt(a.item) || addedAt(b.item) - addedAt(a.item);
+    else if (sort === 'added-asc') comparison = addedAt(a.item) - addedAt(b.item);
     else if (sort === 'title-asc') comparison = (a.item.title || '').localeCompare(b.item.title || '');
     else if (sort === 'rating-desc') comparison = Number(b.item.voteAverage || 0) - Number(a.item.voteAverage || 0);
     else comparison = addedAt(b.item) - addedAt(a.item);
@@ -59,7 +65,16 @@ const Watchlist = () => {
   const [watchlists, setWatchlists] = useState({ movie: [], tv: [] });
   const [activeTab, setActiveTab] = useState('movie');
   const [query, setQuery] = useState('');
-  const [sort, setSort] = useState(() => localStorage.getItem(WATCHLIST_SORT_KEY) || 'added-desc');
+  const [sort, setSort] = useState(() => {
+    const saved = localStorage.getItem(WATCHLIST_SORT_KEY);
+    // `added-desc` was the old default. Migrate it so existing watchlists
+    // immediately bring the title being watched to the front.
+    if (!saved || saved === 'added-desc') {
+      localStorage.setItem(WATCHLIST_SORT_KEY, 'watched-desc');
+      return 'watched-desc';
+    }
+    return saved;
+  });
 
   const refreshWatchlists = useCallback(() => {
     setWatchlists({ movie: getWatchlist('movie'), tv: getWatchlist('tv') });
@@ -98,7 +113,7 @@ const Watchlist = () => {
     <div className="watchlist-page">
       <div className="watchlist-heading">
         <h1>My Watchlist</h1>
-        <p>Newest additions appear first.</p>
+        <p>Recently watched titles appear first.</p>
       </div>
       <div className="watchlist-tabs" role="tablist" aria-label="Watchlist type">
         <button className={`watchlist-tab ${activeTab === 'movie' ? 'active' : ''}`} role="tab" aria-selected={activeTab === 'movie'} onClick={() => setActiveTab('movie')}>Movies <span>{watchlists.movie.length}</span></button>

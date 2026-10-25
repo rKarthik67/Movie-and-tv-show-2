@@ -6,6 +6,7 @@ import dashjs from 'dashjs';
 import { API_KEY } from '../api';
 import { PLAYER_SOURCES, sourceUrl } from '../playerSources';
 import { clearPlaybackProgress, getPlaybackProgress, savePlaybackProgress } from '../playbackStorage';
+import { markWatchlistItemWatched } from '../watchlistStorage';
 import './WatchPlayer.css';
 
 const numberParam = (value, fallback) => Number.parseInt(value || '', 10) || fallback;
@@ -43,6 +44,10 @@ const WatchPlayer = () => {
       .then((response) => alive && setDetails(response.data))
       .catch((error) => console.warn('Unable to load player metadata:', error));
     return () => { alive = false; };
+  }, [id, type]);
+
+  useEffect(() => {
+    if (type === 'movie' || type === 'tv') markWatchlistItemWatched(type, id);
   }, [id, type]);
 
   useEffect(() => {

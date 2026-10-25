@@ -31,9 +31,13 @@ const addedAtValue = (item) => {
   const timestamp = Date.parse(normalizedItem(item)?.addedAt || '');
   return Number.isFinite(timestamp) ? timestamp : 0;
 };
+const watchedAtValue = (item) => {
+  const timestamp = Date.parse(item?.lastWatchedAt || '');
+  return Number.isFinite(timestamp) ? timestamp : 0;
+};
 const newestFirst = (items) => items
   .map((item) => ({ item }))
-  .sort((a, b) => addedAtValue(b.item) - addedAtValue(a.item) || compareStableItems(a.item, b.item))
+  .sort((a, b) => watchedAtValue(b.item) - watchedAtValue(a.item) || addedAtValue(b.item) - addedAtValue(a.item) || compareStableItems(a.item, b.item))
   .map(({ item }) => item);
 
 export const getWatchlist = (type) => {
@@ -179,6 +183,17 @@ export const startSharedWatchlistPolling = () => {
 
 export const isInWatchlist = (type, id) =>
   getWatchlist(type).some((item) => String(item.id) === String(id));
+
+// Playback activity is intentionally device-local: a title watched on one
+// shared-library device should not reorder another person's library view.
+export const markWatchlistItemWatched = (type, id) => {
+  const items = getWatchlist(type);
+  const index = items.findIndex((item) => String(item.id) === String(id));
+  if (index < 0) return false;
+  items[index] = { ...items[index], lastWatchedAt: new Date().toISOString() };
+  saveWatchlist(type, newestFirst(items));
+  return true;
+};
 
 export const toggleWatchlistItem = (type, item) => {
   const items = getWatchlist(type);
