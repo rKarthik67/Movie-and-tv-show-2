@@ -38,7 +38,8 @@
 
 .ranked-slider-card {
   position: relative;
-  padding-left: 30px;
+  /* Reserve a clear lane for the oversized rank at the left. */
+  padding-left: 46px;
 }
 
 .ranked-slider-card .slider-card {
@@ -82,7 +83,7 @@
   }
 
   .ranked-slider-card {
-    padding-left: 22px;
+    padding-left: 34px;
   }
 
   .rank-number {
