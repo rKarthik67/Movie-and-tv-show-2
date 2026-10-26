@@ -1,5 +1,8 @@
 export const PLAYER_SOURCES = [
   { id: 'vidsync', label: 'VidSync', movie: (id) => `https://vidsync.pro/embed/movie/${id}`, tv: (id, s, e) => `https://vidsync.pro/embed/tv/${id}/${s}/${e}` },
+  // VidSrc's documented public iframe API accepts numeric TMDB IDs.  Keep
+  // this as an embed source: its docs do not publish a direct HLS/DASH API.
+  { id: 'vidsrc-sh', label: 'VidSrc', movie: (id) => `https://vidsrc.sh/embed/movie/${id}`, tv: (id, s, e) => `https://vidsrc.sh/embed/tv/${id}/${s}/${e}?autonext=1` },
   { id: 'moviesnexus', label: 'MoviesNexus', movie: (id) => `https://www.moviesnexus.fun/movie/${id}?sv=multiaudio2`, tv: (id, s, e) => `https://www.moviesnexus.fun/tv/${id}/${s}/${e}?sv=multiaudio2` },
   { id: 'server1', label: 'Server 1', movie: (id) => `https://vidsrcme.ru/embed/movie/${id}`, tv: (id, s, e) => `https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
   { id: 'server2', label: 'Server 2', movie: (id) => `https://pro.vidsrc.sbs/embed/movie/${id}`, tv: (id, s, e) => `https://pro.vidsrc.sbs/embed/tv/${id}/${s}/${e}` },
