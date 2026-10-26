@@ -6,7 +6,7 @@ import { getWatchlist, toggleWatchlistItem } from '../watchlistStorage';
 import './PosterGridCard.css';
 import './Slider.css';
 
-const Slider = ({ items, onItemClick, itemType }) => {
+const Slider = ({ items, onItemClick, itemType, ranked = false }) => {
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set());
 
   useEffect(() => {
@@ -44,7 +44,8 @@ const Slider = ({ items, onItemClick, itemType }) => {
 
   return (
     <Swiper
-      spaceBetween={10}
+      className={ranked ? 'top-ranked-slider' : undefined}
+      spaceBetween={ranked ? 32 : 10}
       slidesPerView={4}
       grabCursor={true}
       breakpoints={{
@@ -53,21 +54,24 @@ const Slider = ({ items, onItemClick, itemType }) => {
         480: { slidesPerView: 2 },
       }}
     >
-      {items.map(item => (
+      {items.map((item, index) => (
         <SwiperSlide key={item.id} onClick={() => onItemClick(item.id, itemType)}>
-          <div className="slider-card">
-            <div className="slider-poster-container">
-              <SliderPoster
-                posterPath={item.poster_path}
-                title={item.title || item.name}
-              />
-              <BookmarkButton
-                isBookmarked={bookmarkedIds.has(String(item.id))}
-                onClick={() => handleBookmarkToggle(item)}
-                className="card-bookmark-button"
-              />
+          <div className={ranked ? 'ranked-slider-card' : undefined}>
+            {ranked && <span className="rank-number" aria-hidden="true">{index + 1}</span>}
+            <div className="slider-card">
+              <div className="slider-poster-container">
+                <SliderPoster
+                  posterPath={item.poster_path}
+                  title={item.title || item.name}
+                />
+                <BookmarkButton
+                  isBookmarked={bookmarkedIds.has(String(item.id))}
+                  onClick={() => handleBookmarkToggle(item)}
+                  className="card-bookmark-button"
+                />
+              </div>
+              <h3 className="swiper-slide-title">{item.title || item.name}</h3>
             </div>
-            <h3 className="swiper-slide-title">{item.title || item.name}</h3>
           </div>
         </SwiperSlide>
       ))}

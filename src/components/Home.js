@@ -81,12 +81,12 @@ const Home = () => {
       <div className='section-div'>
         <section>
           <div className='type-section'>
-            <h2>Trending Movies</h2>
+            <h2>Top 10 Movies</h2>
             <Link to="/movies">
               <OutlineButton className="small-for-home-page">View more</OutlineButton>
             </Link>
           </div>
-          <Slider items={currentlyReleasedMovies} onItemClick={handleItemClick} itemType="movie" />
+          <Slider items={currentlyReleasedMovies.slice(0, 10)} onItemClick={handleItemClick} itemType="movie" ranked />
         </section>
 
         <section>
@@ -101,12 +101,12 @@ const Home = () => {
 
         <section>
           <div className='type-section'>
-            <h2>TV Shows</h2>
+            <h2>Top 10 TV Shows</h2>
             <Link to="/tvshows">
               <OutlineButton className="small-for-home-page">View more</OutlineButton>
             </Link>
           </div>
-          <Slider items={tvShows} onItemClick={handleItemClick} itemType="tv" />
+          <Slider items={tvShows.slice(0, 10)} onItemClick={handleItemClick} itemType="tv" ranked />
         </section>
 
         <section>

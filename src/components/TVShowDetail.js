@@ -29,7 +29,9 @@ const TVShowDetail = () => {
     setSeasons(showRes.data.seasons);
 
     const castRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${API_KEY}`);
-    setCast(castRes.data.cast.slice(0, 10));
+    // Keep a browseable selection without rendering TMDB's entire
+    // (often very large) credited cast list at once.
+    setCast(castRes.data.cast.slice(0, 30));
 
     const videosRes = await axios.get(`https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}`);
     setRelatedVideos(videosRes.data.results.slice(0, 4));
